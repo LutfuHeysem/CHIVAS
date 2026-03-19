@@ -1,0 +1,152 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Lora:wght@400;500&display=swap');
+  .vc-wrap { min-height: 600px; display: flex; font-family: 'DM Sans', sans-serif; background: #f0f7f4; border-radius: var(--border-radius-lg); overflow: hidden; }
+  .vc-sidebar { width: 220px; background: #1a6b55; padding: 2.5rem 1.5rem; display: flex; flex-direction: column; gap: 2rem; flex-shrink: 0; }
+  .vc-logo { display: flex; align-items: center; gap: 10px; }
+  .vc-paw { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .vc-brand { font-family: 'Lora', serif; color: #fff; font-size: 17px; font-weight: 500; line-height: 1.2; }
+  .vc-tagline { color: rgba(255,255,255,0.55); font-size: 11px; margin-top: 2px; }
+  .vc-pills { display: flex; flex-direction: column; gap: 8px; margin-top: 0.5rem; }
+  .vc-pill { background: rgba(255,255,255,0.09); border-radius: 8px; padding: 10px 12px; color: rgba(255,255,255,0.75); font-size: 12px; display: flex; gap: 8px; align-items: flex-start; }
+  .vc-pill-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .vc-pill b { display: block; color: #fff; font-weight: 500; font-size: 12px; margin-bottom: 2px; }
+  .vc-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2.5rem; }
+  .vc-card { background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 2rem 2rem 1.75rem; width: 100%; max-width: 360px; }
+  .vc-head { margin-bottom: 1.5rem; }
+  .vc-head h2 { font-family: 'Lora', serif; font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
+  .vc-head p { font-size: 13px; color: var(--color-text-secondary); margin: 0; }
+  .vc-tabs { display: flex; background: #f0f7f4; border-radius: 8px; padding: 3px; margin-bottom: 1.5rem; }
+  .vc-tab { flex: 1; text-align: center; padding: 7px; font-size: 13px; border-radius: 6px; cursor: pointer; color: var(--color-text-secondary); border: none; background: transparent; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+  .vc-tab.active { background: var(--color-background-primary); color: #1a6b55; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .vc-field { margin-bottom: 1rem; }
+  .vc-field label { display: block; font-size: 12px; color: var(--color-text-secondary); margin-bottom: 5px; font-weight: 500; }
+  .vc-field input, .vc-field select { width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px; border: 0.5px solid var(--color-border-tertiary); border-radius: 8px; background: var(--color-background-primary); color: var(--color-text-primary); font-family: 'DM Sans', sans-serif; outline: none; transition: border 0.15s; }
+  .vc-field input:focus, .vc-field select:focus { border-color: #1a6b55; }
+  .vc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .vc-btn { width: 100%; padding: 10px; background: #1a6b55; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 0.25rem; transition: background 0.15s; }
+  .vc-btn:hover { background: #145744; }
+  .vc-forgot { text-align: right; margin-top: -6px; margin-bottom: 10px; }
+  .vc-forgot a { font-size: 12px; color: #1a6b55; text-decoration: none; }
+  .vc-divider { display: flex; align-items: center; gap: 8px; margin: 1rem 0; }
+  .vc-divider span { font-size: 12px; color: var(--color-text-secondary); white-space: nowrap; }
+  .vc-divider::before, .vc-divider::after { content: ''; flex: 1; height: 0.5px; background: var(--color-border-tertiary); }
+  .vc-role-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .vc-note { font-size: 11px; color: var(--color-text-secondary); text-align: center; margin-top: 1.25rem; line-height: 1.5; }
+  .vc-note a { color: #1a6b55; text-decoration: none; }
+  .form-section { display: none; }
+  .form-section.visible { display: block; }
+</style>
+
+<div class="vc-wrap">
+  <div class="vc-sidebar">
+    <div class="vc-logo">
+      <div class="vc-paw">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="6" cy="7" rx="2" ry="3" fill="white" opacity="0.9"/>
+          <ellipse cx="18" cy="7" rx="2" ry="3" fill="white" opacity="0.9"/>
+          <ellipse cx="10" cy="5" rx="1.5" ry="2.5" fill="white" opacity="0.9"/>
+          <ellipse cx="14" cy="5" rx="1.5" ry="2.5" fill="white" opacity="0.9"/>
+          <path d="M12 10c-4 0-7 3-6 7 .5 2 2 3 4 2.5 1-.25 1.5-.5 2-.5s1 .25 2 .5c2 .5 3.5-.5 4-2.5 1-4-2-7-6-7z" fill="white" opacity="0.9"/>
+        </svg>
+      </div>
+      <div>
+        <div class="vc-brand">VetCare<br>System</div>
+        <div class="vc-tagline">CS353 · Database Project</div>
+      </div>
+    </div>
+    <div class="vc-pills">
+      <div class="vc-pill"><div class="vc-pill-icon">🏥</div><div><b>Multi-clinic</b>Branches across the region</div></div>
+      <div class="vc-pill"><div class="vc-pill-icon">🐾</div><div><b>Pet profiles</b>Full medical history</div></div>
+      <div class="vc-pill"><div class="vc-pill-icon">💊</div><div><b>Prescriptions</b>Vaccination tracking</div></div>
+      <div class="vc-pill"><div class="vc-pill-icon">📋</div><div><b>Appointments</b>Scheduling & billing</div></div>
+    </div>
+  </div>
+
+  <div class="vc-main">
+    <div class="vc-card">
+      <div class="vc-head">
+        <h2 id="card-title">Welcome back</h2>
+        <p id="card-sub">Sign in to your account to continue</p>
+      </div>
+
+      <div class="vc-tabs">
+        <button class="vc-tab active" onclick="switchTab('login')">Sign in</button>
+        <button class="vc-tab" onclick="switchTab('register')">Register</button>
+      </div>
+
+      <div id="login-form" class="form-section visible">
+        <div class="vc-field">
+          <label>Email address</label>
+          <input type="email" placeholder="you@example.com" />
+        </div>
+        <div class="vc-field">
+          <label>Password</label>
+          <input type="password" placeholder="••••••••" />
+        </div>
+        <div class="vc-forgot"><a href="#">Forgot password?</a></div>
+        <button class="vc-btn">Sign in</button>
+        <div class="vc-note">
+          By signing in you agree to our <a href="#">terms of service</a> and <a href="#">privacy policy</a>.
+        </div>
+      </div>
+
+      <div id="register-form" class="form-section">
+        <div class="vc-row">
+          <div class="vc-field">
+            <label>First name</label>
+            <input type="text" placeholder="Jane" />
+          </div>
+          <div class="vc-field">
+            <label>Last name</label>
+            <input type="text" placeholder="Smith" />
+          </div>
+        </div>
+        <div class="vc-field">
+          <label>Email address</label>
+          <input type="email" placeholder="you@example.com" />
+        </div>
+        <div class="vc-field">
+          <label>Phone number</label>
+          <input type="tel" placeholder="+90 555 000 00 00" />
+        </div>
+        <div class="vc-field">
+          <label>Role</label>
+          <select>
+            <option value="">Select your role…</option>
+            <option>Pet owner</option>
+            <option>Veterinarian</option>
+            <option>Clinic manager</option>
+          </select>
+        </div>
+        <div class="vc-row">
+          <div class="vc-field">
+            <label>Password</label>
+            <input type="password" placeholder="••••••••" />
+          </div>
+          <div class="vc-field">
+            <label>Confirm</label>
+            <input type="password" placeholder="••••••••" />
+          </div>
+        </div>
+        <button class="vc-btn">Create account</button>
+        <div class="vc-note">
+          Already have an account? <a href="#" onclick="switchTab('login'); return false;">Sign in here</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.vc-tab').forEach((t, i) => {
+    t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1));
+  });
+  document.getElementById('login-form').classList.toggle('visible', tab === 'login');
+  document.getElementById('register-form').classList.toggle('visible', tab === 'register');
+  document.getElementById('card-title').textContent = tab === 'login' ? 'Welcome back' : 'Create an account';
+  document.getElementById('card-sub').textContent = tab === 'login' ? 'Sign in to your account to continue' : 'Join the VetCare platform';
+}
+</script>
