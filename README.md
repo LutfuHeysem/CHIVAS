@@ -57,10 +57,10 @@ VetCare is a multi-branch veterinary clinic management system designed to stream
 
 | Layer | Technology |
 |---|---|
-| Database |  |
-| Backend |  |
-| Frontend |  |
-| ORM / Query |  |
+| Database | MySQL |
+| Backend | .NET |
+| Frontend | React |
+| ORM / Query | EF Core |
 
 ---
 
