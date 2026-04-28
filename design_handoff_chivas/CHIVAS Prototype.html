@@ -1,0 +1,2661 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CHIVAS — Veterinary System Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Brand greens — derived from your mockups, refined */
+    --green-900: #0f3d2e;
+    --green-800: #1a5742;
+    --green-700: #226a52;
+    --green-600: #2d7a5f;
+    --green-500: #3d8e72;
+    --green-400: #6ba88f;
+    --green-300: #a3c8b6;
+    --green-100: #e3efe9;
+    --green-50:  #f1f7f3;
+
+    /* Neutrals */
+    --ink-900: #0c1410;
+    --ink-700: #2e3a34;
+    --ink-500: #5b6963;
+    --ink-400: #8a9690;
+    --ink-300: #b8c3be;
+    --ink-200: #d8e0db;
+    --ink-100: #ecf1ee;
+    --paper:   #f4f8f5;
+    --white:   #ffffff;
+
+    /* Accents */
+    --warm:    #d97757;
+    --warm-soft: #f4d8c9;
+    --gold:    #b89968;
+    --berry:   #8c3a52;
+    --sky:     #5a8aa8;
+    --sky-soft: #d6e3eb;
+
+    /* Status */
+    --ok:      #3d8e72;
+    --warn:    #c98c2c;
+    --danger:  #b54848;
+
+    /* Typography */
+    --display: 'Fraunces', Georgia, serif;
+    --body:    'Inter Tight', system-ui, sans-serif;
+    --mono:    'JetBrains Mono', monospace;
+
+    /* Layout */
+    --sidebar-w: 272px;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 2px rgba(15,61,46,.04), 0 1px 3px rgba(15,61,46,.06);
+    --shadow-md: 0 4px 12px rgba(15,61,46,.06), 0 2px 6px rgba(15,61,46,.04);
+    --shadow-lg: 0 12px 32px rgba(15,61,46,.08), 0 4px 12px rgba(15,61,46,.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: var(--body);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-900);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.005em;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink-900);
+  }
+
+  /* ================== APP SHELL ================== */
+  .app {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) 1fr;
+    min-height: 100vh;
+  }
+
+  /* ================== SIDEBAR ================== */
+  .sidebar {
+    background: linear-gradient(180deg, var(--green-800) 0%, var(--green-900) 100%);
+    color: var(--green-100);
+    padding: 28px 18px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 6px 18px 6px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.1);
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+  }
+  .brand-name {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: white;
+    line-height: 1;
+  }
+  .brand-sub {
+    font-size: 10.5px;
+    color: var(--green-300);
+    margin-top: 4px;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+
+  /* Role switcher */
+  .role-switcher {
+    background: rgba(0,0,0,.18);
+    border-radius: var(--radius-md);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .role-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--green-300);
+    padding: 8px 10px 4px;
+    font-weight: 600;
+  }
+  .role-btn {
+    background: transparent;
+    border: none;
+    color: var(--green-100);
+    font-family: var(--body);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .role-btn:hover { background: rgba(255,255,255,.06); }
+  .role-btn.active {
+    background: var(--green-100);
+    color: var(--green-900);
+    font-weight: 600;
+  }
+  .role-btn .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor; opacity: .5;
+  }
+  .role-btn.active .dot { opacity: 1; }
+
+  /* Nav */
+  .nav-section { display: flex; flex-direction: column; gap: 2px; }
+  .nav-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--green-400);
+    padding: 4px 12px 8px;
+    font-weight: 600;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--green-100);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s ease;
+    border: 1px solid transparent;
+  }
+  .nav-item:hover { background: rgba(255,255,255,.05); }
+  .nav-item.active {
+    background: rgba(255,255,255,.1);
+    color: white;
+    border-color: rgba(255,255,255,.08);
+  }
+  .nav-icon {
+    width: 18px; height: 18px;
+    display: grid; place-items: center;
+    font-size: 15px;
+    opacity: .85;
+  }
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 14px 12px;
+    border-top: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--warm) 0%, var(--gold) 100%);
+    display: grid; place-items: center;
+    font-weight: 600;
+    color: white;
+    font-size: 12px;
+  }
+  .user-name { font-size: 13px; color: white; font-weight: 500; }
+  .user-role { font-size: 11px; color: var(--green-300); }
+
+  /* ================== MAIN ================== */
+  .main {
+    padding: 32px 40px 60px;
+    min-height: 100vh;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .crumbs {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--ink-500);
+    font-weight: 500;
+  }
+  .crumbs .sep { color: var(--ink-300); }
+  .crumbs .current { color: var(--ink-900); font-weight: 600; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+  .icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--white);
+    border: 1px solid var(--ink-200);
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--ink-700);
+    font-size: 15px;
+    transition: all .15s;
+    position: relative;
+  }
+  .icon-btn:hover { border-color: var(--green-500); color: var(--green-700); }
+  .badge-dot {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--warm);
+    border: 2px solid var(--white);
+  }
+
+  /* Page header */
+  .page-header { margin-bottom: 28px; }
+  .page-title {
+    font-size: 36px;
+    line-height: 1.1;
+    font-weight: 500;
+    color: var(--green-800);
+    margin-bottom: 8px;
+    font-variation-settings: "opsz" 144;
+  }
+  .page-title em {
+    font-style: italic;
+    color: var(--warm);
+    font-weight: 400;
+  }
+  .page-sub {
+    color: var(--ink-500);
+    font-size: 15px;
+    max-width: 600px;
+  }
+
+  /* ================== COMMON COMPONENTS ================== */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--ink-200);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 22px 26px 18px;
+    border-bottom: 1px solid var(--ink-100);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .card-title {
+    font-family: var(--display);
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--ink-900);
+    margin-bottom: 4px;
+    letter-spacing: -0.015em;
+  }
+  .card-sub { font-size: 13px; color: var(--ink-500); }
+  .card-body { padding: 22px 26px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: var(--body);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all .15s ease;
+    letter-spacing: -0.005em;
+  }
+  .btn-primary {
+    background: var(--green-700);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--green-800); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-secondary {
+    background: var(--white);
+    color: var(--green-800);
+    border-color: var(--ink-200);
+  }
+  .btn-secondary:hover { border-color: var(--green-500); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--green-700);
+    padding: 8px 12px;
+  }
+  .btn-ghost:hover { background: var(--green-50); }
+  .btn-warm {
+    background: var(--warm);
+    color: white;
+  }
+  .btn-warm:hover { background: #c1684a; }
+  .btn-sm { padding: 7px 12px; font-size: 12.5px; border-radius: 8px; }
+
+  .input, .select {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--ink-200);
+    font-family: var(--body);
+    font-size: 14px;
+    background: var(--white);
+    color: var(--ink-900);
+    transition: all .15s;
+  }
+  .input:focus, .select:focus {
+    outline: none;
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 3px rgba(45,122,95,.1);
+  }
+  .label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-700);
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .pill-green { background: var(--green-100); color: var(--green-800); }
+  .pill-warm  { background: var(--warm-soft); color: #8a3d20; }
+  .pill-sky   { background: var(--sky-soft); color: #2c5670; }
+  .pill-gold  { background: #f3e8d2; color: #6a5328; }
+  .pill-gray  { background: var(--ink-100); color: var(--ink-700); }
+  .pill-danger{ background: #f4dede; color: var(--danger); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-500);
+    border-bottom: 1px solid var(--ink-200);
+    background: var(--green-50);
+  }
+  tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 13.5px;
+    color: var(--ink-900);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--green-50); }
+
+  /* ================== PAGE: hidden by default ================== */
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn .3s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ================== AUTH ================== */
+  .auth-shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+  }
+  .auth-side {
+    background:
+      radial-gradient(circle at 80% 20%, rgba(217,119,87,.18) 0%, transparent 50%),
+      radial-gradient(circle at 20% 80%, rgba(255,255,255,.08) 0%, transparent 50%),
+      linear-gradient(160deg, var(--green-800) 0%, var(--green-900) 100%);
+    color: white;
+    padding: 48px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .auth-side::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+    mask-image: radial-gradient(circle at 50% 50%, black 30%, transparent 70%);
+  }
+  .auth-brand {
+    position: relative;
+    z-index: 1;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .auth-brand .brand-mark {
+    width: 48px; height: 48px;
+    background: rgba(255,255,255,.12);
+  }
+  .auth-brand .brand-name { font-size: 24px; }
+
+  .auth-hero {
+    position: relative;
+    z-index: 1;
+    max-width: 460px;
+  }
+  .auth-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--green-300);
+    margin-bottom: 20px;
+  }
+  .auth-headline {
+    font-family: var(--display);
+    font-size: 48px;
+    line-height: 1.05;
+    font-weight: 400;
+    color: white;
+    letter-spacing: -0.025em;
+    margin-bottom: 20px;
+    font-variation-settings: "opsz" 144;
+  }
+  .auth-headline em {
+    font-style: italic;
+    color: var(--warm-soft);
+    font-weight: 300;
+  }
+  .auth-tagline {
+    font-size: 15px;
+    color: var(--green-300);
+    line-height: 1.6;
+    max-width: 420px;
+  }
+  .auth-features {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 12px;
+  }
+  .auth-feat {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 14px;
+    backdrop-filter: blur(8px);
+  }
+  .auth-feat-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.08);
+    display: grid; place-items: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .auth-feat-title { font-size: 13.5px; font-weight: 600; color: white; margin-bottom: 2px; }
+  .auth-feat-desc { font-size: 12px; color: var(--green-300); line-height: 1.4; }
+
+  .auth-form-wrap {
+    background: var(--paper);
+    padding: 48px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .auth-form {
+    width: 100%;
+    max-width: 420px;
+  }
+  .auth-tabs {
+    display: flex;
+    background: var(--white);
+    border: 1px solid var(--ink-200);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 28px;
+    width: fit-content;
+  }
+  .auth-tab {
+    padding: 8px 18px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-500);
+    transition: all .15s;
+  }
+  .auth-tab.active {
+    background: var(--green-700);
+    color: white;
+  }
+  .auth-title {
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--green-800);
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+  .auth-subtitle { color: var(--ink-500); font-size: 14px; margin-bottom: 24px; }
+  .form-grid { display: grid; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .auth-footer-link {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-500);
+  }
+  .auth-footer-link a { color: var(--green-700); font-weight: 600; text-decoration: none; }
+
+  .role-select-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border-radius: 12px;
+    border: 1.5px solid var(--ink-200);
+    background: var(--white);
+    font-family: var(--body);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-500);
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .role-select-btn:hover { border-color: var(--green-400); color: var(--green-800); }
+  .role-select-btn.active {
+    border-color: var(--green-600);
+    background: var(--green-50);
+    color: var(--green-800);
+    box-shadow: 0 0 0 3px rgba(45,122,95,.1);
+  }
+
+  /* ================== DASHBOARD ================== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius-md);
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: all .2s;
+  }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--green-500);
+  }
+  .stat-card.warm::before { background: var(--warm); }
+  .stat-card.sky::before { background: var(--sky); }
+  .stat-card.gold::before { background: var(--gold); }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-500);
+    margin-bottom: 8px;
+  }
+  .stat-value {
+    font-family: var(--display);
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--ink-900);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-trend {
+    font-size: 12px;
+    color: var(--ok);
+    font-weight: 600;
+  }
+  .stat-trend.down { color: var(--danger); }
+
+  .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--green-300) 0%, var(--ink-200) 100%);
+  }
+  .tl-item { position: relative; margin-bottom: 22px; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -25px; top: 4px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 3px solid var(--green-600);
+    box-shadow: 0 0 0 3px var(--green-50);
+  }
+  .tl-date {
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green-700);
+    margin-bottom: 8px;
+  }
+  .tl-card {
+    background: var(--green-50);
+    border: 1px solid var(--ink-200);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .tl-title {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink-900);
+    margin-bottom: 8px;
+  }
+  .tl-row { display: flex; gap: 8px; margin-bottom: 4px; font-size: 13px; }
+  .tl-key { font-weight: 600; color: var(--ink-700); min-width: 90px; }
+  .tl-val { color: var(--ink-700); }
+  .tl-vet {
+    font-size: 12px;
+    color: var(--ink-500);
+    font-style: italic;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--ink-200);
+  }
+
+  /* Pet cards */
+  .pet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .pet-card {
+    background: var(--white);
+    border: 1px solid var(--ink-200);
+    border-radius: 16px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+  }
+  .pet-card:hover { border-color: var(--green-500); box-shadow: var(--shadow-md); }
+  .pet-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .pet-avatar {
+    width: 52px; height: 52px;
+    border-radius: 16px;
+    display: grid; place-items: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .pet-avatar.dog { background: linear-gradient(135deg, #f4d8c9, #e8b89a); }
+  .pet-avatar.cat { background: linear-gradient(135deg, #e3efe9, #b8d6c5); }
+  .pet-avatar.bird { background: linear-gradient(135deg, #f3e8d2, #ddc488); }
+  .pet-name {
+    font-family: var(--display);
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink-900);
+    line-height: 1.1;
+  }
+  .pet-breed { font-size: 12.5px; color: var(--ink-500); margin-top: 2px; }
+  .pet-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px;
+    background: var(--green-50);
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .pet-meta-item .k {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-500);
+    margin-bottom: 2px;
+  }
+  .pet-meta-item .v {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-900);
+  }
+  .pet-actions { display: flex; gap: 8px; }
+
+  /* Health Plan cards */
+  .plan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .plan-card {
+    background: var(--white);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius-lg);
+    padding: 28px 24px;
+    position: relative;
+    transition: all .2s;
+  }
+  .plan-card:hover:not(.current) { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .plan-card.current {
+    border: 2px solid var(--green-600);
+    background: linear-gradient(180deg, var(--green-50) 0%, var(--white) 60%);
+    box-shadow: 0 8px 24px rgba(45,122,95,.12);
+  }
+  .plan-current-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green-700);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .plan-name {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--ink-900);
+    margin-bottom: 14px;
+  }
+  .plan-price {
+    text-align: center;
+    margin-bottom: 22px;
+    padding-bottom: 22px;
+    border-bottom: 1px dashed var(--ink-200);
+  }
+  .plan-price .num {
+    font-family: var(--display);
+    font-size: 48px;
+    font-weight: 500;
+    color: var(--green-700);
+    line-height: 1;
+  }
+  .plan-price .per { font-size: 13px; color: var(--ink-500); }
+  .plan-features { list-style: none; margin-bottom: 22px; }
+  .plan-features li {
+    padding: 8px 0;
+    font-size: 13.5px;
+    color: var(--ink-700);
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px dashed var(--ink-100);
+  }
+  .plan-features li:last-child { border-bottom: none; }
+  .plan-features .check { color: var(--green-600); font-weight: 700; }
+  .plan-cta {
+    width: 100%;
+    justify-content: center;
+  }
+  .plan-cta:disabled { background: var(--ink-200); color: var(--ink-500); cursor: not-allowed; }
+
+  /* Booking page */
+  .book-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .vet-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    border: 1px solid var(--ink-200);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: all .15s;
+  }
+  .vet-row:hover { border-color: var(--green-500); background: var(--green-50); }
+  .vet-info { display: flex; align-items: center; gap: 12px; }
+  .vet-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-500), var(--green-700));
+    display: grid; place-items: center;
+    color: white; font-weight: 600; font-size: 14px;
+  }
+  .vet-name { font-weight: 600; font-size: 14px; color: var(--ink-900); }
+  .vet-spec { font-size: 12px; color: var(--ink-500); }
+
+  /* Charts */
+  .bar-chart { display: flex; flex-direction: column; gap: 14px; }
+  .bar-row { display: grid; grid-template-columns: 110px 1fr 80px; align-items: center; gap: 12px; }
+  .bar-label { font-size: 13px; font-weight: 600; color: var(--ink-700); }
+  .bar-track {
+    height: 26px;
+    background: var(--green-50);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-600), var(--green-500));
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    color: white;
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+  .bar-fill.warm { background: linear-gradient(90deg, var(--warm), #e89274); }
+  .bar-fill.gold { background: linear-gradient(90deg, var(--gold), #d4b682); }
+  .bar-value { font-size: 13px; font-weight: 600; color: var(--ink-900); text-align: right; }
+
+  /* Patient header (vet view) */
+  .patient-header {
+    background: linear-gradient(135deg, var(--green-800) 0%, var(--green-700) 100%);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    color: white;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .patient-header::after {
+    content: '';
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(217,119,87,.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .patient-avatar-lg {
+    width: 76px; height: 76px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.15);
+    display: grid; place-items: center;
+    font-size: 38px;
+    backdrop-filter: blur(10px);
+    flex-shrink: 0;
+  }
+  .patient-info { flex: 1; }
+  .patient-name {
+    font-family: var(--display);
+    font-size: 30px;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .patient-meta {
+    display: flex; gap: 20px;
+    color: var(--green-300);
+    font-size: 13px;
+  }
+  .patient-meta strong { color: white; font-weight: 600; }
+
+  .patient-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    background: rgba(0,0,0,.15);
+    padding: 14px;
+    border-radius: 14px;
+  }
+  .pstat-label { font-size: 10.5px; color: var(--green-300); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .pstat-value { font-size: 16px; font-weight: 600; color: white; margin-top: 2px; }
+
+  /* Stock */
+  .stock-meter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .stock-bar {
+    width: 80px; height: 6px;
+    background: var(--ink-100);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .stock-bar > div {
+    height: 100%;
+    border-radius: 3px;
+  }
+
+  /* Misc */
+  .empty-cta {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-500);
+    font-size: 13px;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink-900);
+    margin-bottom: 14px;
+    letter-spacing: -0.015em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--ink-200), transparent);
+  }
+
+  /* Notifications panel */
+  .notif-item {
+    display: flex; gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--ink-100);
+    transition: background .15s;
+    cursor: pointer;
+  }
+  .notif-item:hover { background: var(--green-50); }
+  .notif-item.unread { background: linear-gradient(90deg, rgba(217,119,87,.05), transparent); }
+  .notif-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .notif-icon.green { background: var(--green-100); color: var(--green-700); }
+  .notif-icon.warm { background: var(--warm-soft); color: #8a3d20; }
+  .notif-icon.gold { background: #f3e8d2; color: #6a5328; }
+  .notif-text { flex: 1; }
+  .notif-title { font-size: 13.5px; font-weight: 600; color: var(--ink-900); margin-bottom: 2px; }
+  .notif-desc { font-size: 12.5px; color: var(--ink-500); line-height: 1.4; }
+  .notif-time { font-size: 11px; color: var(--ink-400); margin-top: 4px; }
+
+  /* Bills */
+  .bill-card {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border: 1px solid var(--ink-200);
+    border-radius: 14px;
+    margin-bottom: 10px;
+    background: var(--white);
+  }
+  .bill-left { display: flex; align-items: center; gap: 14px; }
+  .bill-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--green-50);
+    display: grid; place-items: center;
+    color: var(--green-700);
+    font-size: 18px;
+  }
+  .bill-amount { font-family: var(--display); font-size: 22px; font-weight: 600; color: var(--ink-900); }
+  .bill-amount.discount { font-size: 14px; color: var(--ink-400); text-decoration: line-through; }
+
+  /* Mobile narrow */
+  @media (max-width: 1100px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .pet-grid, .plan-grid { grid-template-columns: 1fr 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; }
+    .main { padding: 20px; }
+    .stats-grid, .pet-grid, .plan-grid, .grid-3, .book-grid { grid-template-columns: 1fr; }
+    .auth-shell { grid-template-columns: 1fr; }
+    .auth-side { padding: 32px 24px; }
+    .auth-form-wrap { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =============== AUTH PAGE =============== -->
+<div class="page" id="page-login">
+  <div class="auth-shell">
+    <div class="auth-side">
+      <div class="auth-brand">
+        <div class="brand-mark">🐾</div>
+        <div>
+          <div class="brand-name">CHIVAS</div>
+          <div class="brand-sub">Central Health Inventory & Veterinary Appointment System</div>
+        </div>
+      </div>
+      <div class="auth-hero">
+        <span class="auth-tag">Veterinary Network · Türkiye</span>
+        <h1 class="auth-headline">Bütünleşik <em>klinik bakımı</em> tek panelden.</h1>
+        <p class="auth-tagline">Pet sahipleri, veterinerler ve klinik yöneticileri için randevu, tıbbi geçmiş, sağlık planları ve stok yönetimini tek sistemde birleştirir.</p>
+      </div>
+      <div class="auth-features">
+        <div class="auth-feat">
+          <div class="auth-feat-icon">🏥</div>
+          <div>
+            <div class="auth-feat-title">Multi-clinic ağı</div>
+            <div class="auth-feat-desc">Bölgedeki tüm şubeler arasında senkronize randevu</div>
+          </div>
+        </div>
+        <div class="auth-feat">
+          <div class="auth-feat-icon">📋</div>
+          <div>
+            <div class="auth-feat-title">Pet medical timeline</div>
+            <div class="auth-feat-desc">Teşhis, reçete ve aşı geçmişi tek görünümde</div>
+          </div>
+        </div>
+        <div class="auth-feat">
+          <div class="auth-feat-icon">💎</div>
+          <div>
+            <div class="auth-feat-title">Premium sağlık planları</div>
+            <div class="auth-feat-desc">İndirim ve ücretsiz checkup ayrıcalıkları</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-form-wrap">
+      <div class="auth-form">
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchAuthTab(this, 'signin')">Giriş yap</button>
+          <button class="auth-tab" onclick="switchAuthTab(this, 'register')">Kayıt ol</button>
+        </div>
+
+        <div id="auth-signin">
+          <h2 class="auth-title">Tekrar hoş geldin.</h2>
+          <p class="auth-subtitle">Devam etmek için hesabına giriş yap.</p>
+          <div class="form-grid">
+            <div>
+              <label class="label">Rol</label>
+              <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:8px;">
+                <button class="role-select-btn active" data-role="owner" onclick="selectLoginRole(this,'owner')">
+                  <span style="font-size:18px;">🐾</span>
+                  <span>Pet Owner</span>
+                </button>
+                <button class="role-select-btn" data-role="vet" onclick="selectLoginRole(this,'vet')">
+                  <span style="font-size:18px;">🩺</span>
+                  <span>Veterinarian</span>
+                </button>
+                <button class="role-select-btn" data-role="manager" onclick="selectLoginRole(this,'manager')">
+                  <span style="font-size:18px;">📊</span>
+                  <span>Manager</span>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label class="label">E-posta</label>
+              <input class="input" type="email" placeholder="ornek@chivas.vet" />
+            </div>
+            <div>
+              <label class="label">Şifre</label>
+              <input class="input" type="password" placeholder="••••••••" />
+            </div>
+            <a href="#" style="font-size: 12.5px; color: var(--green-700); text-decoration: none; text-align: right; font-weight: 600;">Şifremi unuttum →</a>
+            <button class="btn btn-primary" style="justify-content: center; padding: 14px;" onclick="goToDashboard()">Giriş yap</button>
+          </div>
+          <div class="auth-footer-link">Hesabın yok mu? <a href="#" onclick="switchAuthTab(document.querySelectorAll('.auth-tab')[1], 'register')">Hemen kayıt ol</a></div>
+        </div>
+
+        <div id="auth-register" style="display:none;">
+          <h2 class="auth-title">Hesap oluştur.</h2>
+          <p class="auth-subtitle">CHIVAS platformuna katıl.</p>
+          <div class="form-grid">
+            <div class="form-row">
+              <div>
+                <label class="label">Ad</label>
+                <input class="input" placeholder="Hasan" />
+              </div>
+              <div>
+                <label class="label">Soyad</label>
+                <input class="input" placeholder="Yılmaz" />
+              </div>
+            </div>
+            <div>
+              <label class="label">E-posta</label>
+              <input class="input" type="email" placeholder="ornek@chivas.vet" />
+            </div>
+            <div>
+              <label class="label">Telefon</label>
+              <input class="input" placeholder="+90 555 000 00 00" />
+            </div>
+            <div>
+              <label class="label">Rol</label>
+              <select class="select">
+                <option>Rol seç...</option>
+                <option>Pet Owner</option>
+                <option>Veterinarian</option>
+                <option>Clinic Manager</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Klinik (varsa)</label>
+              <select class="select">
+                <option>Klinik seç...</option>
+                <option>Downtown Clinic</option>
+                <option>Westside Branch</option>
+                <option>Northside Branch</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div>
+                <label class="label">Şifre</label>
+                <input class="input" type="password" placeholder="••••••••" />
+              </div>
+              <div>
+                <label class="label">Tekrar</label>
+                <input class="input" type="password" placeholder="••••••••" />
+              </div>
+            </div>
+            <button class="btn btn-primary" style="justify-content: center; padding: 14px;" onclick="goToDashboard()">Hesap oluştur</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============== APP SHELL =============== -->
+<div class="page active" id="page-app">
+<div class="app">
+
+  <!-- =============== SIDEBAR =============== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">🐾</div>
+      <div>
+        <div class="brand-name">CHIVAS</div>
+        <div class="brand-sub">Veterinary System</div>
+      </div>
+    </div>
+
+    <button class="role-btn" style="margin-top:4px; background:rgba(0,0,0,.18); border-radius:10px; padding:10px 14px;" onclick="goToLogin()">
+      <span class="dot"></span> Çıkış yap
+    </button>
+
+    <!-- OWNER NAV -->
+    <nav class="nav-section role-nav" data-role-nav="owner">
+      <div class="nav-title">Bakım</div>
+      <div class="nav-item active" data-page="owner-dashboard" onclick="switchPage(this, 'owner-dashboard')">
+        <span class="nav-icon">⌂</span> Dashboard
+      </div>
+      <div class="nav-item" data-page="owner-pets" onclick="switchPage(this, 'owner-pets')">
+        <span class="nav-icon">🐕</span> My Pets
+      </div>
+      <div class="nav-item" data-page="owner-book" onclick="switchPage(this, 'owner-book')">
+        <span class="nav-icon">📅</span> Book Appointment
+      </div>
+      <div class="nav-item" data-page="owner-history" onclick="switchPage(this, 'owner-history')">
+        <span class="nav-icon">📋</span> Medical History
+      </div>
+      <div class="nav-title" style="margin-top: 12px;">Finans</div>
+      <div class="nav-item" data-page="owner-bills" onclick="switchPage(this, 'owner-bills')">
+        <span class="nav-icon">💳</span> Bills
+      </div>
+      <div class="nav-item" data-page="owner-plans" onclick="switchPage(this, 'owner-plans')">
+        <span class="nav-icon">💎</span> Health Plans
+      </div>
+      <div class="nav-item" data-page="owner-notifications" onclick="switchPage(this, 'owner-notifications')">
+        <span class="nav-icon">🔔</span> Notifications
+      </div>
+    </nav>
+
+    <!-- VET NAV -->
+    <nav class="nav-section role-nav" data-role-nav="vet" style="display:none;">
+      <div class="nav-title">Klinik</div>
+      <div class="nav-item active" data-page="vet-dashboard" onclick="switchPage(this, 'vet-dashboard')">
+        <span class="nav-icon">⌂</span> Today's Schedule
+      </div>
+      <div class="nav-item" data-page="vet-patient" onclick="switchPage(this, 'vet-patient')">
+        <span class="nav-icon">🐾</span> Patient Records
+      </div>
+      <div class="nav-item" data-page="vet-prescribe" onclick="switchPage(this, 'vet-prescribe')">
+        <span class="nav-icon">💊</span> Prescriptions
+      </div>
+      <div class="nav-item" data-page="vet-vaccinate" onclick="switchPage(this, 'vet-vaccinate')">
+        <span class="nav-icon">💉</span> Vaccination Plans
+      </div>
+      <div class="nav-item" data-page="vet-referrals" onclick="switchPage(this, 'vet-referrals')">
+        <span class="nav-icon">↗</span> Referrals
+      </div>
+    </nav>
+
+    <!-- MANAGER NAV -->
+    <nav class="nav-section role-nav" data-role-nav="manager" style="display:none;">
+      <div class="nav-title">Operasyon</div>
+      <div class="nav-item active" data-page="manager-dashboard" onclick="switchPage(this, 'manager-dashboard')">
+        <span class="nav-icon">⌂</span> Manager Hub
+      </div>
+      <div class="nav-item" data-page="manager-plans" onclick="switchPage(this, 'manager-plans')">
+        <span class="nav-icon">📊</span> Health Plan Analytics
+      </div>
+      <div class="nav-item" data-page="manager-stock" onclick="switchPage(this, 'manager-stock')">
+        <span class="nav-icon">📦</span> Stock & Waste
+      </div>
+      <div class="nav-item" data-page="manager-staff" onclick="switchPage(this, 'manager-staff')">
+        <span class="nav-icon">👥</span> Staff Management
+      </div>
+      <div class="nav-item" data-page="manager-reports" onclick="switchPage(this, 'manager-reports')">
+        <span class="nav-icon">📈</span> Reports
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar" id="user-avatar">HY</div>
+      <div>
+        <div class="user-name" id="user-name">Hasan Yılmaz</div>
+        <div class="user-role" id="user-role">Pet Owner</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =============== MAIN AREA =============== -->
+  <main class="main">
+    <div class="topbar">
+      <div class="crumbs">
+        <span>CHIVAS</span>
+        <span class="sep">/</span>
+        <span id="crumb-role">Pet Owner</span>
+        <span class="sep">/</span>
+        <span class="current" id="crumb-page">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <div class="icon-btn" title="Search">⌕</div>
+        <div class="icon-btn" title="Notifications">🔔<span class="badge-dot"></span></div>
+        <div class="icon-btn" title="Settings">⚙</div>
+      </div>
+    </div>
+
+    <!-- ============ OWNER: DASHBOARD ============ -->
+    <div class="page-content active" data-page-content="owner-dashboard">
+      <div class="page-header">
+        <h1 class="page-title">Hoş geldin, <em>Hasan</em></h1>
+        <p class="page-sub">Petlerinin bakım takvimi ve son aktiviteler bir bakışta.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Aktif Petler</div>
+          <div class="stat-value">3</div>
+          <div class="stat-trend">+1 bu ay</div>
+        </div>
+        <div class="stat-card warm">
+          <div class="stat-label">Yaklaşan Randevu</div>
+          <div class="stat-value">2</div>
+          <div class="stat-trend">15 Nisan, 14:30</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Bekleyen Fatura</div>
+          <div class="stat-value">₺850</div>
+          <div class="stat-trend down">3 gün içinde</div>
+        </div>
+        <div class="stat-card sky">
+          <div class="stat-label">Aktif Plan</div>
+          <div class="stat-value" style="font-size:22px;">Premium Plus</div>
+          <div class="stat-trend">15% indirim aktif</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Yaklaşan Randevular</div>
+              <div class="card-sub">Önümüzdeki 14 gün için planlanmış</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="navTo('owner-book')">+ Randevu al</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Pet</th>
+                <th>Veteriner</th>
+                <th>Şube</th>
+                <th>Tarih</th>
+                <th>Durum</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Max</strong> · Golden Retriever</td>
+                <td>Dr. Alan Grant</td>
+                <td>Downtown</td>
+                <td>15 Nisan, 14:30</td>
+                <td><span class="pill pill-green">Scheduled</span></td>
+              </tr>
+              <tr>
+                <td><strong>Luna</strong> · British Shorthair</td>
+                <td>Dr. Ellie Sattler</td>
+                <td>Westside</td>
+                <td>22 Nisan, 10:00</td>
+                <td><span class="pill pill-gold">Confirmed</span></td>
+              </tr>
+              <tr>
+                <td><strong>Mochi</strong> · Cockatiel</td>
+                <td>Dr. Ian Malcolm</td>
+                <td>Northside</td>
+                <td>3 Mayıs, 16:15</td>
+                <td><span class="pill pill-gray">Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Son Bildirimler</div>
+              <div class="card-sub">Kaçırma</div>
+            </div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon warm">💉</div>
+            <div class="notif-text">
+              <div class="notif-title">Aşı zamanı yaklaşıyor</div>
+              <div class="notif-desc">Max'in kuduz aşısı 5 gün içinde planlı.</div>
+              <div class="notif-time">2 saat önce</div>
+            </div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon green">✓</div>
+            <div class="notif-text">
+              <div class="notif-title">Randevu onaylandı</div>
+              <div class="notif-desc">Luna için Westside şubesinde 22 Nisan randevusu onaylandı.</div>
+              <div class="notif-time">5 saat önce</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon gold">💳</div>
+            <div class="notif-text">
+              <div class="notif-title">Yeni fatura oluşturuldu</div>
+              <div class="notif-desc">Max'in son ziyareti için ₺850 fatura — %15 plan indirimi uygulandı.</div>
+              <div class="notif-time">1 gün önce</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ OWNER: PETS ============ -->
+    <div class="page-content" data-page-content="owner-pets" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Petlerim</h1>
+        <p class="page-sub">Tüm aile üyelerinin profillerini ve tıbbi geçmişlerini buradan yönet.</p>
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+        <button class="btn btn-primary">+ Yeni Pet ekle</button>
+      </div>
+      <div class="pet-grid">
+        <div class="pet-card">
+          <div class="pet-head">
+            <div class="pet-avatar dog">🐕</div>
+            <div>
+              <div class="pet-name">Max</div>
+              <div class="pet-breed">Golden Retriever · Erkek</div>
+            </div>
+          </div>
+          <div class="pet-meta">
+            <div class="pet-meta-item"><div class="k">Yaş</div><div class="v">4 yıl</div></div>
+            <div class="pet-meta-item"><div class="k">Kilo</div><div class="v">28 kg</div></div>
+            <div class="pet-meta-item"><div class="k">Alerji</div><div class="v">Yok</div></div>
+            <div class="pet-meta-item"><div class="k">Son ziyaret</div><div class="v">10 Mart</div></div>
+          </div>
+          <div class="pet-actions">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">Detay</button>
+            <button class="btn btn-primary btn-sm" style="flex:1;">Randevu al</button>
+          </div>
+        </div>
+
+        <div class="pet-card">
+          <div class="pet-head">
+            <div class="pet-avatar cat">🐈</div>
+            <div>
+              <div class="pet-name">Luna</div>
+              <div class="pet-breed">British Shorthair · Dişi</div>
+            </div>
+          </div>
+          <div class="pet-meta">
+            <div class="pet-meta-item"><div class="k">Yaş</div><div class="v">2 yıl</div></div>
+            <div class="pet-meta-item"><div class="k">Kilo</div><div class="v">4.2 kg</div></div>
+            <div class="pet-meta-item"><div class="k">Alerji</div><div class="v">Tavuk</div></div>
+            <div class="pet-meta-item"><div class="k">Son ziyaret</div><div class="v">22 Şubat</div></div>
+          </div>
+          <div class="pet-actions">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">Detay</button>
+            <button class="btn btn-primary btn-sm" style="flex:1;">Randevu al</button>
+          </div>
+        </div>
+
+        <div class="pet-card">
+          <div class="pet-head">
+            <div class="pet-avatar bird">🦜</div>
+            <div>
+              <div class="pet-name">Mochi</div>
+              <div class="pet-breed">Cockatiel · Dişi</div>
+            </div>
+          </div>
+          <div class="pet-meta">
+            <div class="pet-meta-item"><div class="k">Yaş</div><div class="v">1 yıl</div></div>
+            <div class="pet-meta-item"><div class="k">Kilo</div><div class="v">90 g</div></div>
+            <div class="pet-meta-item"><div class="k">Alerji</div><div class="v">Yok</div></div>
+            <div class="pet-meta-item"><div class="k">Son ziyaret</div><div class="v">5 Nisan</div></div>
+          </div>
+          <div class="pet-actions">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">Detay</button>
+            <button class="btn btn-primary btn-sm" style="flex:1;">Randevu al</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ OWNER: BOOK ============ -->
+    <div class="page-content" data-page-content="owner-book" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Randevu al</h1>
+        <p class="page-sub">Petin için zaman çakışması olmayan vetlerle randevu planla.</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Randevu Detayları</div>
+            <div class="card-sub">1. Adım — Pet, şube ve zaman seç</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="book-grid">
+            <div>
+              <label class="label">Pet seç</label>
+              <select class="select">
+                <option>Max (Golden Retriever)</option>
+                <option>Luna (British Shorthair)</option>
+                <option>Mochi (Cockatiel)</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Şube seç</label>
+              <select class="select">
+                <option>Downtown Clinic — Çankaya</option>
+                <option>Westside Branch — Bahçelievler</option>
+                <option>Northside Branch — Keçiören</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Tercih edilen tarih</label>
+              <input class="input" type="date" value="2026-04-15" />
+            </div>
+            <div>
+              <label class="label">Tercih edilen saat</label>
+              <input class="input" type="time" value="14:30" />
+            </div>
+          </div>
+          <div style="margin-top: 18px;">
+            <label class="label">İşlem türü</label>
+            <select class="select">
+              <option>General Checkup</option>
+              <option>Vaccination</option>
+              <option>Dermatology Consult</option>
+              <option>Dental Cleaning</option>
+              <option>Surgery Consultation</option>
+            </select>
+          </div>
+          <div style="margin-top: 22px;">
+            <button class="btn btn-primary">Müsait veterinerleri kontrol et →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Müsait Veterinerler <span style="font-size:13px; color:var(--green-700); font-weight:600;">· Conflict-Free</span></div>
+            <div class="card-sub">2. Adım — 15 Nisan 2026, 14:30 için müsait olanlar</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="vet-row">
+            <div class="vet-info">
+              <div class="vet-avatar">AG</div>
+              <div>
+                <div class="vet-name">Dr. Alan Grant</div>
+                <div class="vet-spec">General Practice · Canine specialist · ⭐ 4.9</div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm">Bu slotu rezerve et</button>
+          </div>
+          <div class="vet-row">
+            <div class="vet-info">
+              <div class="vet-avatar">ES</div>
+              <div>
+                <div class="vet-name">Dr. Ellie Sattler</div>
+                <div class="vet-spec">Internal Medicine · Multi-species · ⭐ 4.8</div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm">Bu slotu rezerve et</button>
+          </div>
+          <div class="vet-row">
+            <div class="vet-info">
+              <div class="vet-avatar">IM</div>
+              <div>
+                <div class="vet-name">Dr. Ian Malcolm</div>
+                <div class="vet-spec">Surgery · Emergency response · ⭐ 4.7</div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm">Bu slotu rezerve et</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ OWNER: HISTORY ============ -->
+    <div class="page-content" data-page-content="owner-history" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Tıbbi Geçmiş</h1>
+        <p class="page-sub">Petlerinin tüm ziyaret, teşhis ve reçete kayıtları.</p>
+      </div>
+      <div style="display:flex; gap:12px; margin-bottom: 20px; align-items: center;">
+        <select class="select" style="max-width: 280px;">
+          <option>Max (ID: 1042)</option>
+          <option>Luna (ID: 1043)</option>
+          <option>Mochi (ID: 1044)</option>
+        </select>
+        <span class="pill pill-green">3 kayıt</span>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-date">10 Mart 2026 · 14:30</div>
+              <div class="tl-card">
+                <div class="tl-title">Annual Checkup & Vaccination</div>
+                <div class="tl-row"><div class="tl-key">Symptoms:</div><div class="tl-val">Belirti kaydı yok, sağlıklı kilo.</div></div>
+                <div class="tl-row"><div class="tl-key">Diagnosis:</div><div class="tl-val">Healthy — routine annual checkup completed.</div></div>
+                <div class="tl-row"><div class="tl-key">Prescribed:</div><div class="tl-val">Rabies Vaccine, Heartworm Preventative</div></div>
+                <div class="tl-vet">Attending: Dr. Alan Grant · Downtown Clinic</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-date">15 Ocak 2026 · 11:00</div>
+              <div class="tl-card">
+                <div class="tl-title">Dermatology Consult</div>
+                <div class="tl-row"><div class="tl-key">Symptoms:</div><div class="tl-val">Karın bölgesinde aşırı kaşınma ve kızarıklık.</div></div>
+                <div class="tl-row"><div class="tl-key">Diagnosis:</div><div class="tl-val">Mild contact dermatitis — likely environmental allergen.</div></div>
+                <div class="tl-row"><div class="tl-key">Prescribed:</div><div class="tl-val">Corticosteroid Cream (2x/gün), Antihistamine (7 gün)</div></div>
+                <div class="tl-vet">Attending: Dr. Ellie Sattler · Westside Branch</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-date">5 Kasım 2025</div>
+              <div class="tl-card">
+                <div class="tl-title">Initial Registration & First Visit</div>
+                <div class="tl-row"><div class="tl-key">Symptoms:</div><div class="tl-val">Yok — kayıt ziyareti.</div></div>
+                <div class="tl-row"><div class="tl-key">Diagnosis:</div><div class="tl-val">Baseline health profile established.</div></div>
+                <div class="tl-row"><div class="tl-key">Prescribed:</div><div class="tl-val">Distemper, Parvovirus initial doses</div></div>
+                <div class="tl-vet">Attending: Dr. Alan Grant · Downtown Clinic</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ OWNER: BILLS ============ -->
+    <div class="page-content" data-page-content="owner-bills" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Faturalarım</h1>
+        <p class="page-sub">Bekleyen ve geçmiş ödemelerin. Premium Plus plan indirimleri otomatik uygulanır.</p>
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-card warm">
+          <div class="stat-label">Bekleyen tutar</div>
+          <div class="stat-value">₺850</div>
+          <div class="stat-trend down">1 fatura</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Bu ay ödenen</div>
+          <div class="stat-value">₺1,420</div>
+          <div class="stat-trend">2 fatura</div>
+        </div>
+        <div class="stat-card sky">
+          <div class="stat-label">Plan tasarrufu</div>
+          <div class="stat-value">₺312</div>
+          <div class="stat-trend">Premium Plus aktif</div>
+        </div>
+      </div>
+
+      <h3 class="section-title">Bekleyen</h3>
+      <div class="bill-card" style="border-color: var(--warm); background: linear-gradient(90deg, rgba(217,119,87,.04), transparent);">
+        <div class="bill-left">
+          <div class="bill-icon" style="background: var(--warm-soft); color: #8a3d20;">⏳</div>
+          <div>
+            <div style="font-weight:600; font-size:14px; color: var(--ink-900);">Annual Checkup — Max</div>
+            <div style="font-size:12.5px; color:var(--ink-500); margin-top:2px;">10 Mart 2026 · Dr. Alan Grant · Downtown</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div style="text-align:right;">
+            <div class="bill-amount discount">₺1,000</div>
+            <div class="bill-amount">₺850</div>
+          </div>
+          <button class="btn btn-primary btn-sm">Şimdi öde</button>
+        </div>
+      </div>
+
+      <h3 class="section-title" style="margin-top: 28px;">Ödenen</h3>
+      <div class="bill-card">
+        <div class="bill-left">
+          <div class="bill-icon">✓</div>
+          <div>
+            <div style="font-weight:600; font-size:14px;">Dermatology Consult — Max</div>
+            <div style="font-size:12.5px; color:var(--ink-500); margin-top:2px;">15 Ocak 2026 · Dr. Ellie Sattler</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div class="bill-amount">₺720</div>
+          <span class="pill pill-green">Paid</span>
+        </div>
+      </div>
+      <div class="bill-card">
+        <div class="bill-left">
+          <div class="bill-icon">✓</div>
+          <div>
+            <div style="font-weight:600; font-size:14px;">Premium Plus Subscription — Mart</div>
+            <div style="font-size:12.5px; color:var(--ink-500); margin-top:2px;">1 Mart 2026 · Aylık üyelik</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div class="bill-amount">₺700</div>
+          <span class="pill pill-green">Paid</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ OWNER: HEALTH PLANS ============ -->
+    <div class="page-content" data-page-content="owner-plans" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Premium <em>Sağlık Planları</em></h1>
+        <p class="page-sub">Rutin checkup ve işlemlerde tasarruf et. Mevcut planın yanında <strong style="color:var(--green-700)">Premium Plus</strong> aktif.</p>
+      </div>
+      <div class="plan-grid">
+        <div class="plan-card">
+          <div class="plan-name">Basic Care</div>
+          <div class="plan-price">
+            <span class="num">₺350</span><br>
+            <span class="per">/ ay</span>
+          </div>
+          <ul class="plan-features">
+            <li><span class="check">✓</span> Tüm işlemlerde %5 indirim</li>
+            <li><span class="check">✓</span> Yılda 1 ücretsiz checkup</li>
+            <li><span class="check">✓</span> Temel aşı kapsamı</li>
+            <li><span class="check">✓</span> SMS hatırlatıcılar</li>
+          </ul>
+          <button class="btn btn-secondary plan-cta">Abone ol</button>
+        </div>
+        <div class="plan-card current">
+          <div class="plan-current-badge">Current Plan</div>
+          <div class="plan-name">Premium Plus</div>
+          <div class="plan-price">
+            <span class="num">₺700</span><br>
+            <span class="per">/ ay</span>
+          </div>
+          <ul class="plan-features">
+            <li><span class="check">✓</span> Tüm işlemlerde %15 indirim</li>
+            <li><span class="check">✓</span> Yılda 3 ücretsiz checkup</li>
+            <li><span class="check">✓</span> Tam aşı + parazit kontrolü</li>
+            <li><span class="check">✓</span> Öncelikli randevu hakkı</li>
+          </ul>
+          <button class="btn btn-primary plan-cta" disabled>Abone — 1 Mart 2026</button>
+        </div>
+        <div class="plan-card">
+          <div class="plan-name">VIP Care</div>
+          <div class="plan-price">
+            <span class="num">₺1,400</span><br>
+            <span class="per">/ ay</span>
+          </div>
+          <ul class="plan-features">
+            <li><span class="check">✓</span> Tüm işlemlerde %30 indirim</li>
+            <li><span class="check">✓</span> Sınırsız ücretsiz checkup</li>
+            <li><span class="check">✓</span> 7/24 acil öncelik hattı</li>
+            <li><span class="check">✓</span> Evde bakım ziyareti hakkı</li>
+          </ul>
+          <button class="btn btn-warm plan-cta">Plan'ı yükselt ↑</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ OWNER: NOTIFICATIONS ============ -->
+    <div class="page-content" data-page-content="owner-notifications" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Bildirimler</h1>
+        <p class="page-sub">Randevu, fatura ve aşı hatırlatıcıların.</p>
+      </div>
+      <div class="card">
+        <div class="notif-item unread">
+          <div class="notif-icon warm">💉</div>
+          <div class="notif-text">
+            <div class="notif-title">Aşı zamanı yaklaşıyor — Max</div>
+            <div class="notif-desc">Kuduz aşısı 5 gün içinde planlandı. Randevu almayı unutma.</div>
+            <div class="notif-time">2 saat önce</div>
+          </div>
+        </div>
+        <div class="notif-item unread">
+          <div class="notif-icon green">✓</div>
+          <div class="notif-text">
+            <div class="notif-title">Randevu onaylandı — Luna</div>
+            <div class="notif-desc">22 Nisan 2026, 10:00, Westside Branch · Dr. Ellie Sattler</div>
+            <div class="notif-time">5 saat önce</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon gold">💳</div>
+          <div class="notif-text">
+            <div class="notif-title">Yeni fatura oluşturuldu</div>
+            <div class="notif-desc">Max'in son ziyareti için ₺850. Plan indirimi sonrası tutar.</div>
+            <div class="notif-time">1 gün önce</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon green">⭐</div>
+          <div class="notif-text">
+            <div class="notif-title">Değerlendirme isteği</div>
+            <div class="notif-desc">Dr. Ellie Sattler ile son ziyaretini değerlendir misin?</div>
+            <div class="notif-time">3 gün önce</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VET: DASHBOARD ============ -->
+    <div class="page-content" data-page-content="vet-dashboard" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">İyi günler, <em>Dr. Sattler</em></h1>
+        <p class="page-sub">Bugün için 6 randevun var. İlk hasta 14 dakika içinde.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Bugünkü randevular</div>
+          <div class="stat-value">6</div>
+          <div class="stat-trend">2 tamamlandı</div>
+        </div>
+        <div class="stat-card warm">
+          <div class="stat-label">Sıradaki hasta</div>
+          <div class="stat-value" style="font-size:22px;">Max · 14:30</div>
+          <div class="stat-trend down">14 dk içinde</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Bekleyen reçete</div>
+          <div class="stat-value">3</div>
+          <div class="stat-trend">İmza bekliyor</div>
+        </div>
+        <div class="stat-card sky">
+          <div class="stat-label">Bu hafta</div>
+          <div class="stat-value">28</div>
+          <div class="stat-trend">randevu tamamlandı</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Bugünün Programı — 28 Nisan 2026</div>
+            <div class="card-sub">Westside Branch · Çankaya</div>
+          </div>
+          <button class="btn btn-secondary btn-sm">Tüm programı gör</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Saat</th>
+              <th>Pet</th>
+              <th>Owner</th>
+              <th>Procedure</th>
+              <th>Durum</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>09:00</strong></td>
+              <td>Bella · Labrador</td>
+              <td>Sarah Chen</td>
+              <td>Vaccination</td>
+              <td><span class="pill pill-green">Tamamlandı</span></td>
+              <td><button class="btn btn-ghost btn-sm">Kayıt →</button></td>
+            </tr>
+            <tr>
+              <td><strong>10:30</strong></td>
+              <td>Whiskers · Persian</td>
+              <td>James Park</td>
+              <td>Dental Cleaning</td>
+              <td><span class="pill pill-green">Tamamlandı</span></td>
+              <td><button class="btn btn-ghost btn-sm">Kayıt →</button></td>
+            </tr>
+            <tr style="background: var(--green-50);">
+              <td><strong>14:30</strong></td>
+              <td>Max · Golden Retriever</td>
+              <td>Hasan Yılmaz</td>
+              <td>Annual Checkup</td>
+              <td><span class="pill pill-warm">Sıradaki</span></td>
+              <td><button class="btn btn-primary btn-sm" onclick="navTo('vet-patient')">Aç →</button></td>
+            </tr>
+            <tr>
+              <td><strong>15:30</strong></td>
+              <td>Rocky · Bulldog</td>
+              <td>Maria Lopez</td>
+              <td>Surgery Followup</td>
+              <td><span class="pill pill-gray">Scheduled</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><strong>16:15</strong></td>
+              <td>Mochi · Cockatiel</td>
+              <td>Hasan Yılmaz</td>
+              <td>Beak Trim</td>
+              <td><span class="pill pill-gray">Scheduled</span></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><strong>17:00</strong></td>
+              <td>Shadow · Mixed Breed</td>
+              <td>David Kim</td>
+              <td>Allergy Consult</td>
+              <td><span class="pill pill-gray">Scheduled</span></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ VET: PATIENT RECORDS ============ -->
+    <div class="page-content" data-page-content="vet-patient" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Hasta Kaydı</h1>
+        <p class="page-sub">Aktif konsültasyon · 14:30 · Annual Checkup</p>
+      </div>
+
+      <div class="patient-header">
+        <div class="patient-avatar-lg">🐕</div>
+        <div class="patient-info">
+          <div class="patient-name">Max</div>
+          <div class="patient-meta">
+            <span><strong>ID:</strong> 1042</span>
+            <span><strong>Türü:</strong> Golden Retriever</span>
+            <span><strong>Cinsiyet:</strong> Erkek</span>
+            <span><strong>Yaş:</strong> 4 yıl</span>
+          </div>
+        </div>
+        <div class="patient-stats">
+          <div>
+            <div class="pstat-label">Owner</div>
+            <div class="pstat-value">Hasan Y.</div>
+          </div>
+          <div>
+            <div class="pstat-label">Plan</div>
+            <div class="pstat-value">Premium+</div>
+          </div>
+          <div>
+            <div class="pstat-label">Alerji</div>
+            <div class="pstat-value">Yok</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3 class="section-title">Tıbbi Geçmiş</h3>
+          <div class="card">
+            <div class="card-body">
+              <div class="timeline">
+                <div class="tl-item">
+                  <div class="tl-date">10 Mart 2026</div>
+                  <div class="tl-card">
+                    <div class="tl-title">Annual Checkup & Vaccination</div>
+                    <div class="tl-row"><div class="tl-key">Diagnosis:</div><div class="tl-val">Sağlıklı, rutin tamamlandı</div></div>
+                    <div class="tl-row"><div class="tl-key">Prescribed:</div><div class="tl-val">Rabies, Heartworm Preventative</div></div>
+                    <div class="tl-vet">Dr. Alan Grant</div>
+                  </div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-date">15 Ocak 2026</div>
+                  <div class="tl-card">
+                    <div class="tl-title">Dermatology Consult</div>
+                    <div class="tl-row"><div class="tl-key">Diagnosis:</div><div class="tl-val">Contact dermatitis</div></div>
+                    <div class="tl-row"><div class="tl-key">Prescribed:</div><div class="tl-val">Corticosteroid, Antihistamine</div></div>
+                    <div class="tl-vet">Dr. Ellie Sattler</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="section-title">Yeni Kayıt</h3>
+          <div class="card">
+            <div class="card-body">
+              <label class="label">Symptoms / Gözlem</label>
+              <textarea class="input" rows="3" placeholder="Hasta gözlemleri ve şikayetler..." style="font-family: var(--body); resize: vertical;">Sağlıklı görünüm, kilo stabil. Hafif ağız kokusu mevcut.</textarea>
+
+              <label class="label" style="margin-top: 14px;">Diagnosis</label>
+              <input class="input" placeholder="Teşhis kodu veya açıklama" value="Mild plaque buildup — overall healthy" />
+
+              <label class="label" style="margin-top: 14px;">Prescription</label>
+              <select class="select">
+                <option>Heartworm Preventative — 3 ay</option>
+                <option>Dental Cleaning Treatment</option>
+                <option>Antibiotik (genel)</option>
+              </select>
+
+              <label class="label" style="margin-top: 14px;">Follow-up notu</label>
+              <input class="input" placeholder="Öneriler..." value="6 ay sonra dental check tavsiye edilir" />
+
+              <div style="display: flex; gap: 10px; margin-top: 18px;">
+                <button class="btn btn-primary" style="flex:1; justify-content:center;">Kaydı tamamla</button>
+                <button class="btn btn-secondary">Sevk oluştur</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VET: PRESCRIBE ============ -->
+    <div class="page-content" data-page-content="vet-prescribe" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Reçeteler</h1>
+        <p class="page-sub">Aktif ve geçmiş reçeteleri yönet.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Bekleyen Reçeteler</div>
+            <div class="card-sub">İmza ve onay bekliyor</div>
+          </div>
+          <button class="btn btn-primary btn-sm">+ Yeni reçete</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Tarih</th>
+              <th>Pet / Owner</th>
+              <th>İlaç</th>
+              <th>Doz</th>
+              <th>Süre</th>
+              <th>Durum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>28 Nis 2026</td>
+              <td><strong>Bella</strong> / S. Chen</td>
+              <td>Amoxicillin 250mg</td>
+              <td>2x gün</td>
+              <td>10 gün</td>
+              <td><span class="pill pill-warm">Onay bekliyor</span></td>
+            </tr>
+            <tr>
+              <td>27 Nis 2026</td>
+              <td><strong>Whiskers</strong> / J. Park</td>
+              <td>Metronidazole</td>
+              <td>1x gün</td>
+              <td>7 gün</td>
+              <td><span class="pill pill-warm">Onay bekliyor</span></td>
+            </tr>
+            <tr>
+              <td>27 Nis 2026</td>
+              <td><strong>Rocky</strong> / M. Lopez</td>
+              <td>Carprofen 75mg</td>
+              <td>2x gün</td>
+              <td>14 gün</td>
+              <td><span class="pill pill-warm">Onay bekliyor</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ VET: VACCINATE ============ -->
+    <div class="page-content" data-page-content="vet-vaccinate" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Aşı Planları</h1>
+        <p class="page-sub">Pet'ler için yapılandırılmış aşılama programları.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Aktif Plan: Max</div>
+              <div class="card-sub">Plan ID: VP-1042 · Toplam 4 doz</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <table>
+              <thead>
+                <tr><th>Doz #</th><th>Aşı</th><th>Hedef tarih</th><th>Durum</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>1</strong></td><td>Distemper</td><td>5 Kas 2025</td><td><span class="pill pill-green">Tamamlandı</span></td></tr>
+                <tr><td><strong>2</strong></td><td>Parvovirus</td><td>5 Kas 2025</td><td><span class="pill pill-green">Tamamlandı</span></td></tr>
+                <tr><td><strong>3</strong></td><td>Rabies</td><td>10 Mar 2026</td><td><span class="pill pill-green">Tamamlandı</span></td></tr>
+                <tr><td><strong>4</strong></td><td>Bordetella</td><td>3 May 2026</td><td><span class="pill pill-warm">Yaklaşıyor</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Yeni Plan Oluştur</div>
+              <div class="card-sub">Pet için aşılama programı</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <label class="label">Pet seç</label>
+            <select class="select"><option>Bella · Labrador</option></select>
+            <label class="label" style="margin-top:14px;">Plan template</label>
+            <select class="select">
+              <option>Puppy Standard (8 doz / 12 ay)</option>
+              <option>Adult Annual</option>
+              <option>Senior Care</option>
+              <option>Custom</option>
+            </select>
+            <label class="label" style="margin-top:14px;">Başlangıç tarihi</label>
+            <input class="input" type="date" value="2026-05-01" />
+            <button class="btn btn-primary" style="margin-top: 18px; width: 100%; justify-content: center;">Planı oluştur</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VET: REFERRALS ============ -->
+    <div class="page-content" data-page-content="vet-referrals" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Sevkler</h1>
+        <p class="page-sub">Diğer uzman veterinerlere yönlendirilen vakalar.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Açık Sevkler</div>
+            <div class="card-sub">Yanıt veya görüş bekleyen</div>
+          </div>
+          <button class="btn btn-primary btn-sm">+ Sevk oluştur</button>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Tarih</th><th>Pet</th><th>Sevk eden</th><th>Sevk edilen</th><th>Sebep</th><th>Durum</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>20 Nis 2026</td>
+              <td>Shadow</td>
+              <td>Dr. Sattler</td>
+              <td>Dr. Malcolm (Surgery)</td>
+              <td>Suspected ACL tear</td>
+              <td><span class="pill pill-warm">Bekliyor</span></td>
+            </tr>
+            <tr>
+              <td>15 Nis 2026</td>
+              <td>Tiger</td>
+              <td>Dr. Sattler</td>
+              <td>External Specialist</td>
+              <td>Cardiology consult</td>
+              <td><span class="pill pill-green">Yanıtlandı</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ MANAGER: DASHBOARD ============ -->
+    <div class="page-content" data-page-content="manager-dashboard" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Manager <em>Hub</em></h1>
+        <p class="page-sub">Tüm şubeler için operasyonel özet ve KPI takibi.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Aktif Şubeler</div>
+          <div class="stat-value">3</div>
+          <div class="stat-trend">Tümü operasyonel</div>
+        </div>
+        <div class="stat-card sky">
+          <div class="stat-label">Toplam Aboneler</div>
+          <div class="stat-value">251</div>
+          <div class="stat-trend">+12 bu hafta</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Aylık Gelir</div>
+          <div class="stat-value">₺10,200</div>
+          <div class="stat-trend">+8% MoM</div>
+        </div>
+        <div class="stat-card warm">
+          <div class="stat-label">Düşük Stok Uyarısı</div>
+          <div class="stat-value">4</div>
+          <div class="stat-trend down">Aksiyon gerekli</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Şube Performansı</div>
+              <div class="card-sub">Bu ay tamamlanan randevular</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="bar-chart">
+              <div class="bar-row">
+                <div class="bar-label">Downtown</div>
+                <div class="bar-track"><div class="bar-fill" style="width: 92%;">142 randevu</div></div>
+                <div class="bar-value">92%</div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label">Westside</div>
+                <div class="bar-track"><div class="bar-fill warm" style="width: 78%;">108 randevu</div></div>
+                <div class="bar-value">78%</div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label">Northside</div>
+                <div class="bar-track"><div class="bar-fill gold" style="width: 65%;">87 randevu</div></div>
+                <div class="bar-value">65%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Acil Aksiyonlar</div>
+              <div class="card-sub">İlgilenilmesi gereken</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon warm">⚠</div>
+            <div class="notif-text">
+              <div class="notif-title">Stok kritik seviyenin altında</div>
+              <div class="notif-desc">Rabies Vaccine — Westside · 8 adet kaldı</div>
+              <div class="notif-time">1 saat önce</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon gold">📅</div>
+            <div class="notif-text">
+              <div class="notif-title">3 ilaç son kullanma yaklaşıyor</div>
+              <div class="notif-desc">Northside şubesi — 14 gün içinde</div>
+              <div class="notif-time">3 saat önce</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon green">⭐</div>
+            <div class="notif-text">
+              <div class="notif-title">Yeni VIP plan üyesi</div>
+              <div class="notif-desc">Eleanor Shellstrop · ₺1,400/ay</div>
+              <div class="notif-time">5 saat önce</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ MANAGER: HEALTH PLAN ANALYTICS ============ -->
+    <div class="page-content" data-page-content="manager-plans" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Sağlık Plan <em>Analitiği</em></h1>
+        <p class="page-sub">Premium planları yönet ve gerçek zamanlı abone istatistiklerini görüntüle.</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Aktif Sağlık Planları</div>
+            <div class="card-sub">Active_Health_Plan_Stats view</div>
+          </div>
+          <button class="btn btn-primary btn-sm">+ Yeni plan</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Plan adı</th>
+              <th>Aylık ücret</th>
+              <th>Toplam abone</th>
+              <th>Aylık gelir</th>
+              <th>Popülerlik sırası</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Basic Care</strong></td>
+              <td>₺350.00</td>
+              <td>142</td>
+              <td>₺49,700.00</td>
+              <td><span class="pill pill-green">#1</span></td>
+              <td><button class="btn btn-ghost btn-sm">Düzenle</button></td>
+            </tr>
+            <tr>
+              <td><strong>Premium Plus</strong></td>
+              <td>₺700.00</td>
+              <td>85</td>
+              <td>₺59,500.00</td>
+              <td><span class="pill pill-gold">#2</span></td>
+              <td><button class="btn btn-ghost btn-sm">Düzenle</button></td>
+            </tr>
+            <tr>
+              <td><strong>VIP Care</strong></td>
+              <td>₺1,400.00</td>
+              <td>24</td>
+              <td>₺33,600.00</td>
+              <td><span class="pill pill-warm">#3</span></td>
+              <td><button class="btn btn-ghost btn-sm">Düzenle</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Pazarlama Hedefi: Yüksek Harcama Yapanlar (Aboneliksiz)</div>
+            <div class="card-sub">Plan'a abone olmayan en çok harcayan müşteriler</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Owner</th>
+              <th>E-posta</th>
+              <th>Toplam harcama</th>
+              <th>Pet sayısı</th>
+              <th>Aksiyon</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Eleanor Shellstrop</strong></td>
+              <td>eleanor@example.com</td>
+              <td>₺1,850</td>
+              <td>2</td>
+              <td><button class="btn btn-warm btn-sm">Promo gönder</button></td>
+            </tr>
+            <tr>
+              <td><strong>Chidi Anagonye</strong></td>
+              <td>chidi@example.com</td>
+              <td>₺1,620</td>
+              <td>1</td>
+              <td><button class="btn btn-warm btn-sm">Promo gönder</button></td>
+            </tr>
+            <tr>
+              <td><strong>Tahani Al-Jamil</strong></td>
+              <td>tahani@example.com</td>
+              <td>₺1,490</td>
+              <td>3</td>
+              <td><button class="btn btn-warm btn-sm">Promo gönder</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ MANAGER: STOCK ============ -->
+    <div class="page-content" data-page-content="manager-stock" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Stok & Atık</h1>
+        <p class="page-sub">Şube bazında ilaç envanteri ve atık kayıt sistemi (trigger-based stock deduction).</p>
+      </div>
+      <div style="display:flex; gap:12px; margin-bottom: 20px;">
+        <select class="select" style="max-width:240px;">
+          <option>Tüm şubeler</option>
+          <option>Downtown</option>
+          <option>Westside</option>
+          <option>Northside</option>
+        </select>
+        <select class="select" style="max-width:240px;">
+          <option>Tüm kategoriler</option>
+          <option>Vaccines</option>
+          <option>Antibiotics</option>
+          <option>Pain relief</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" style="margin-left:auto;">+ Atık kaydet</button>
+        <button class="btn btn-primary btn-sm">+ Stok ekle</button>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>İlaç</th>
+              <th>Şube</th>
+              <th>Stok</th>
+              <th>Durum</th>
+              <th>Son kullanma</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Rabies Vaccine</strong><br><small style="color:var(--ink-500);">VAC-001</small></td>
+              <td>Westside</td>
+              <td>
+                <div class="stock-meter">
+                  <div class="stock-bar"><div style="width:16%; background:var(--danger);"></div></div>
+                  <strong>8</strong> / 50
+                </div>
+              </td>
+              <td><span class="pill pill-danger">Kritik</span></td>
+              <td>15 Tem 2026</td>
+              <td><button class="btn btn-primary btn-sm">Sipariş ver</button></td>
+            </tr>
+            <tr>
+              <td><strong>Heartworm Preventative</strong><br><small style="color:var(--ink-500);">MED-014</small></td>
+              <td>Downtown</td>
+              <td>
+                <div class="stock-meter">
+                  <div class="stock-bar"><div style="width:62%; background:var(--green-600);"></div></div>
+                  <strong>62</strong> / 100
+                </div>
+              </td>
+              <td><span class="pill pill-green">Sağlıklı</span></td>
+              <td>22 Eyl 2026</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><strong>Amoxicillin 250mg</strong><br><small style="color:var(--ink-500);">ANT-007</small></td>
+              <td>Westside</td>
+              <td>
+                <div class="stock-meter">
+                  <div class="stock-bar"><div style="width:34%; background:var(--warn);"></div></div>
+                  <strong>34</strong> / 100
+                </div>
+              </td>
+              <td><span class="pill pill-warm">Düşük</span></td>
+              <td>3 Haz 2026</td>
+              <td><button class="btn btn-secondary btn-sm">Sipariş</button></td>
+            </tr>
+            <tr>
+              <td><strong>Corticosteroid Cream</strong><br><small style="color:var(--ink-500);">DRM-002</small></td>
+              <td>Northside</td>
+              <td>
+                <div class="stock-meter">
+                  <div class="stock-bar"><div style="width:78%; background:var(--green-600);"></div></div>
+                  <strong>78</strong> / 100
+                </div>
+              </td>
+              <td><span class="pill pill-green">Sağlıklı</span></td>
+              <td>10 May 2026</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><strong>Carprofen 75mg</strong><br><small style="color:var(--ink-500);">PAI-003</small></td>
+              <td>Downtown</td>
+              <td>
+                <div class="stock-meter">
+                  <div class="stock-bar"><div style="width:12%; background:var(--danger);"></div></div>
+                  <strong>6</strong> / 50
+                </div>
+              </td>
+              <td><span class="pill pill-danger">Kritik</span></td>
+              <td>1 Ara 2026</td>
+              <td><button class="btn btn-primary btn-sm">Sipariş ver</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ MANAGER: STAFF ============ -->
+    <div class="page-content" data-page-content="manager-staff" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Personel Yönetimi</h1>
+        <p class="page-sub">Veterinerler ve şube atamaları.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Aktif Personel</div>
+            <div class="card-sub">7 veteriner · 3 şube</div>
+          </div>
+          <button class="btn btn-primary btn-sm">+ Personel ekle</button>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Veteriner</th><th>Uzmanlık</th><th>Şube</th><th>Bu hafta randevu</th><th>Rating</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div style="display:flex; gap:10px; align-items:center;"><div class="vet-avatar" style="width:32px; height:32px; font-size:11px;">AG</div><strong>Dr. Alan Grant</strong></div></td>
+              <td>General Practice · Canine</td>
+              <td>Downtown</td>
+              <td>32</td>
+              <td>⭐ 4.9</td>
+              <td><button class="btn btn-ghost btn-sm">Detay</button></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex; gap:10px; align-items:center;"><div class="vet-avatar" style="width:32px; height:32px; font-size:11px;">ES</div><strong>Dr. Ellie Sattler</strong></div></td>
+              <td>Internal Medicine</td>
+              <td>Westside</td>
+              <td>28</td>
+              <td>⭐ 4.8</td>
+              <td><button class="btn btn-ghost btn-sm">Detay</button></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex; gap:10px; align-items:center;"><div class="vet-avatar" style="width:32px; height:32px; font-size:11px;">IM</div><strong>Dr. Ian Malcolm</strong></div></td>
+              <td>Surgery · Emergency</td>
+              <td>Downtown</td>
+              <td>19</td>
+              <td>⭐ 4.7</td>
+              <td><button class="btn btn-ghost btn-sm">Detay</button></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex; gap:10px; align-items:center;"><div class="vet-avatar" style="width:32px; height:32px; font-size:11px;">JH</div><strong>Dr. John Hammond</strong></div></td>
+              <td>Exotic Animals</td>
+              <td>Northside</td>
+              <td>15</td>
+              <td>⭐ 4.6</td>
+              <td><button class="btn btn-ghost btn-sm">Detay</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ MANAGER: REPORTS ============ -->
+    <div class="page-content" data-page-content="manager-reports" style="display:none;">
+      <div class="page-header">
+        <h1 class="page-title">Raporlar</h1>
+        <p class="page-sub">Önceden tanımlanmış raporlar ve dışa aktarım.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card" style="cursor:pointer;">
+          <div class="card-body" style="text-align:center; padding: 32px 22px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">📊</div>
+            <h3 style="font-family: var(--display); font-size: 18px; font-weight:600; margin-bottom: 6px;">Aylık Gelir</h3>
+            <p style="font-size:13px; color: var(--ink-500); margin-bottom:14px;">Şube bazında gelir kırılımı</p>
+            <button class="btn btn-secondary btn-sm">PDF indir</button>
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer;">
+          <div class="card-body" style="text-align:center; padding: 32px 22px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">💉</div>
+            <h3 style="font-family: var(--display); font-size: 18px; font-weight:600; margin-bottom: 6px;">Aşı Uyumu</h3>
+            <p style="font-size:13px; color: var(--ink-500); margin-bottom:14px;">Plan tamamlama oranları</p>
+            <button class="btn btn-secondary btn-sm">PDF indir</button>
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer;">
+          <div class="card-body" style="text-align:center; padding: 32px 22px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">📦</div>
+            <h3 style="font-family: var(--display); font-size: 18px; font-weight:600; margin-bottom: 6px;">Stok Hareketleri</h3>
+            <p style="font-size:13px; color: var(--ink-500); margin-bottom:14px;">Atık ve tüketim analizi</p>
+            <button class="btn btn-secondary btn-sm">PDF indir</button>
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer;">
+          <div class="card-body" style="text-align:center; padding: 32px 22px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">⭐</div>
+            <h3 style="font-family: var(--display); font-size: 18px; font-weight:600; margin-bottom: 6px;">Personel Performansı</h3>
+            <p style="font-size:13px; color: var(--ink-500); margin-bottom:14px;">Vet bazında randevu ve rating</p>
+            <button class="btn btn-secondary btn-sm">PDF indir</button>
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer;">
+          <div class="card-body" style="text-align:center; padding: 32px 22px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">🐾</div>
+            <h3 style="font-family: var(--display); font-size: 18px; font-weight:600; margin-bottom: 6px;">Pet Demografisi</h3>
+            <p style="font-size:13px; color: var(--ink-500); margin-bottom:14px;">Tür, ırk ve yaş dağılımı</p>
+            <button class="btn btn-secondary btn-sm">PDF indir</button>
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer; border-style:dashed; border-color: var(--green-500);">
+          <div class="card-body" style="text-align:center; padding: 32px 22px;">
+            <div style="font-size: 36px; margin-bottom: 12px; color: var(--green-700);">+</div>
+            <h3 style="font-family: var(--display); font-size: 18px; font-weight:600; margin-bottom: 6px;">Özel Rapor</h3>
+            <p style="font-size:13px; color: var(--ink-500); margin-bottom:14px;">SQL ile özel sorgu çalıştır</p>
+            <button class="btn btn-primary btn-sm">Oluştur</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<script>
+  let selectedLoginRole = 'owner';
+
+  function selectLoginRole(btn, role) {
+    document.querySelectorAll('.role-select-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedLoginRole = role;
+  }
+
+  function switchAuthTab(btn, tab) {
+    document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('auth-signin').style.display = tab === 'signin' ? '' : 'none';
+    document.getElementById('auth-register').style.display = tab === 'register' ? '' : 'none';
+  }
+
+  const roleConfig = {
+    owner:   { name: 'Hasan Yılmaz', short: 'HY', label: 'Pet Owner', firstPage: 'owner-dashboard' },
+    vet:     { name: 'Dr. Ellie Sattler', short: 'ES', label: 'Veterinarian', firstPage: 'vet-dashboard' },
+    manager: { name: 'Sarah Connor', short: 'SC', label: 'Clinic Manager', firstPage: 'manager-dashboard' }
+  };
+
+  function goToDashboard() {
+    const role = selectedLoginRole;
+    const cfg = roleConfig[role];
+
+    // Show correct nav
+    document.querySelectorAll('.role-nav').forEach(nav => {
+      nav.style.display = nav.dataset.roleNav === role ? '' : 'none';
+    });
+
+    // Update user info
+    document.getElementById('user-name').textContent = cfg.name;
+    document.getElementById('user-avatar').textContent = cfg.short;
+    document.getElementById('user-role').textContent = cfg.label;
+    document.getElementById('crumb-role').textContent = cfg.label;
+
+    // Activate first page
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    const firstNav = document.querySelector(`.nav-item[data-page="${cfg.firstPage}"]`);
+    if (firstNav) firstNav.classList.add('active');
+    showPageContent(cfg.firstPage);
+
+    document.getElementById('page-login').classList.remove('active');
+    document.getElementById('page-app').classList.add('active');
+  }
+
+  function goToLogin() {
+    document.getElementById('page-app').classList.remove('active');
+    document.getElementById('page-login').classList.add('active');
+  }
+
+  function switchPage(item, page) {
+    const nav = item.closest('.nav-section');
+    nav.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    showPageContent(page);
+    document.getElementById('crumb-page').textContent = item.querySelector('.nav-icon').nextSibling.textContent.trim();
+  }
+
+  function navTo(page) {
+    const item = document.querySelector(`.nav-item[data-page="${page}"]`);
+    if (item) switchPage(item, page);
+  }
+
+  function showPageContent(page) {
+    document.querySelectorAll('.page-content').forEach(pc => {
+      const isActive = pc.dataset.pageContent === page;
+      pc.style.display = isActive ? '' : 'none';
+      if (isActive) {
+        pc.classList.add('active');
+      } else {
+        pc.classList.remove('active');
+      }
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
