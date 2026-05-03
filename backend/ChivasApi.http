@@ -1,0 +1,6 @@
+@ChivasApi_HostAddress = http://localhost:5030
+
+GET {{ChivasApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

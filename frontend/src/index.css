@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Colors */
+  --green-900: #0f3d2e;
+  --green-800: #1a5742;
+  --green-700: #226a52;
+  --green-600: #2d7a5f;
+  --green-500: #3d8e72;
+  --green-400: #6ba88f;
+  --green-300: #a3c8b6;
+  --green-100: #e3efe9;
+  --green-50:  #f1f7f3;
+
+  --ink-900: #0c1410;
+  --ink-700: #2e3a34;
+  --ink-500: #5b6963;
+  --ink-400: #8a9690;
+  --ink-300: #b8c3be;
+  --ink-200: #d8e0db;
+  --ink-100: #ecf1ee;
+  --paper:   #f4f8f5;
+  --white:   #ffffff;
+
+  --warm:      #d97757;
+  --warm-soft: #f4d8c9;
+  --gold:      #b89968;
+  --berry:     #8c3a52;
+  --sky:       #5a8aa8;
+  --sky-soft:  #d6e3eb;
+
+  --ok:     #3d8e72;
+  --warn:   #c98c2c;
+  --danger: #b54848;
+
+  /* Typography */
+  --display: 'Fraunces', Georgia, serif;
+  --body:    'Inter Tight', system-ui, sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+
+  /* Spacing & Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --sidebar-w: 272px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(15,61,46,.04), 0 1px 3px rgba(15,61,46,.06);
+  --shadow-md: 0 4px 12px rgba(15,61,46,.06), 0 2px 6px rgba(15,61,46,.04);
+  --shadow-lg: 0 12px 32px rgba(15,61,46,.08), 0 4px 12px rgba(15,61,46,.06);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--body);
+  background-color: var(--paper);
+  color: var(--ink-700);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: var(--display);
+}
+
+.font-mono {
+  font-family: var(--mono);
+}
+
+/* Base button styles */
+button {
+  font-family: var(--body);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+/* Page transitions */
+.page-enter {
+  animation: pageFadeIn 0.3s ease forwards;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Badges / Pills */
+.pill {
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  display: inline-block;
+}
+.pill-green { background: var(--green-100); color: var(--green-800); }
+.pill-warm { background: var(--warm-soft); color: #8a3d20; }
+.pill-sky { background: var(--sky-soft); color: #2c5670; }
+.pill-gold { background: #f3e8d2; color: #6a5328; }
+.pill-gray { background: var(--ink-100); color: var(--ink-700); }
+.pill-danger { background: #f4dede; color: var(--danger); }
