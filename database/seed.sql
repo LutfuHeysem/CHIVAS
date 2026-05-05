@@ -49,11 +49,20 @@ INSERT INTO Branch_Stock (branch_id, med_id, stock_amount) VALUES
 (1, 2, 20);
 
 -- Insert Appointments
-INSERT INTO Appointment (appntm_id, date, time, procedure_name, follow_up_notes, pet_id, vet_id) VALUES 
-(1, '2026-05-10', '10:00:00', 'General Checkup', 'Looks healthy', 1, 1),
-(2, '2025-10-15', '14:30:00', 'Annual Checkup', 'Dog is healthy', 1, 1),
-(3, '2026-01-20', '09:15:00', 'Dental Cleaning', 'Slight plaque buildup', 1, 1),
-(4, '2026-04-05', '11:00:00', 'Flea Treatment', 'Apply drops monthly', 2, 1);
+INSERT INTO Appointment (appntm_id, date, time, procedure_name, follow_up_notes, pet_id, vet_id, status) VALUES 
+(1, CURDATE(), '10:00:00', 'General Checkup', 'Pending checkup', 1, 1, 'Scheduled'),
+(2, '2025-10-15', '14:30:00', 'Annual Checkup', 'Dog is healthy', 1, 1, 'Completed'),
+(3, '2026-01-20', '09:15:00', 'Dental Cleaning', 'Slight plaque buildup', 1, 1, 'Completed'),
+(4, '2026-04-05', '11:00:00', 'Flea Treatment', 'Apply drops monthly', 2, 1, 'Completed'),
+(5, CURDATE(), '14:00:00', 'Vaccination', 'Needs rabies shot', 2, 1, 'Scheduled'),
+(6, DATE_ADD(CURDATE(), INTERVAL 2 DAY), '09:00:00', 'Surgery Consult', 'Check leg', 1, 1, 'Scheduled'),
+(7, '2026-03-10', '16:00:00', 'Grooming', 'Cancelled by owner', 2, 1, 'Cancelled');
+
+-- Insert Diagnoses
+INSERT INTO Diagnosis (type, symptoms, appntm_id) VALUES
+('Healthy', 'None', 2),
+('Gingivitis', 'Plaque and bad breath', 3),
+('Flea Infestation', 'Scratching', 4);
 
 -- Insert Bills
 INSERT INTO Bill (type, amount, status, payment_date, appntm_id) VALUES 

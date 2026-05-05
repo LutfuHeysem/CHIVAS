@@ -18,7 +18,6 @@ namespace ChivasApi.Controllers
             _db = db;
         }
 
-<<<<<<< Updated upstream
         [HttpGet("pet/{petId}")]
         public async Task<IActionResult> GetVaccinations(int petId)
         {
@@ -121,24 +120,7 @@ namespace ChivasApi.Controllers
              
              return Ok(new { Message = "Status updated." });
         }
-    }
 
-    public class ScheduleVaccineRequest
-    {
-        public int PetId { get; set; }
-        public int VaccineId { get; set; }
-        public string PlannedDate { get; set; } = null!;
-        public string Status { get; set; } = "Pending";
-        public int DoseNumber { get; set; } = 1;
-    }
-    
-    public class UpdateVaccineStatusRequest
-    {
-        public int PlanId { get; set; }
-        public int VaccineId { get; set; }
-        public int DoseNumber { get; set; }
-        public string Status { get; set; } = null!;
-=======
         [HttpGet("my")]
         [Authorize(Roles = "PetOwner")]
         public async Task<IActionResult> GetMyVaccinations()
@@ -166,6 +148,22 @@ namespace ChivasApi.Controllers
             var vaccines = await _db.QueryAsync(sql, new { UserId = userId });
             return Ok(vaccines);
         }
->>>>>>> Stashed changes
+    }
+
+    public class ScheduleVaccineRequest
+    {
+        public int PetId { get; set; }
+        public int VaccineId { get; set; }
+        public string PlannedDate { get; set; } = null!;
+        public string Status { get; set; } = "Pending";
+        public int DoseNumber { get; set; } = 1;
+    }
+    
+    public class UpdateVaccineStatusRequest
+    {
+        public int PlanId { get; set; }
+        public int VaccineId { get; set; }
+        public int DoseNumber { get; set; }
+        public string Status { get; set; } = null!;
     }
 }

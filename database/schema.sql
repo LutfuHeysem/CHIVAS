@@ -115,6 +115,7 @@ CREATE TABLE Appointment (
     follow_up_notes TEXT,
     pet_id INT NOT NULL,
     vet_id INT NOT NULL,
+    status ENUM('Scheduled', 'Completed', 'Cancelled') DEFAULT 'Scheduled',
     FOREIGN KEY (pet_id) REFERENCES Pet(pet_id) ON DELETE CASCADE,
     FOREIGN KEY (vet_id) REFERENCES Veterinarian(vet_id) ON DELETE CASCADE
 );
