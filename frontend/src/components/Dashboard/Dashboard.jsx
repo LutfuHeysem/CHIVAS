@@ -188,7 +188,7 @@ const OwnerView = ({ data }) => {
       <div className={styles.quickGrid}>
         <button className={styles.quickBtn} onClick={() => navigate('/book-appointment')}><span className={styles.quickBtnIcon}>📅</span>Book Appointment</button>
         <button className={styles.quickBtn} onClick={() => navigate('/my-pets')}><span className={styles.quickBtnIcon}>🐾</span>Add New Pet</button>
-        <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>💳</span>Pay Outstanding Bill</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/bills')}><span className={styles.quickBtnIcon}>💳</span>Pay Outstanding Bill</button>
       </div>
 
       <div className={styles.twoCol}>
@@ -215,9 +215,9 @@ const OwnerView = ({ data }) => {
 
         <div className={styles.featureLinks}>
           <Feature onClick={() => navigate('/my-pets')} icon="🐾" color="green" title="My Pets" desc="View pet profiles, health records, and vaccinations." />
-          <Feature icon="📋" color="blue" title="Medical History" desc="Timeline of past visits, diagnoses, and treatments." />
-          <Feature icon="💳" color="gold" title="Bills & Payments" desc="View invoices and health plan discounts." />
-          <Feature icon="🛡️" color="warm" title="Health Plans" desc="Compare plans and upgrade for better coverage." />
+          <Feature onClick={() => navigate('/medical-history')} icon="📋" color="blue" title="Medical History" desc="Timeline of past visits, diagnoses, and treatments." />
+          <Feature onClick={() => navigate('/bills')} icon="💳" color="gold" title="Bills & Payments" desc="View invoices and pay outstanding balances." />
+          <Feature onClick={() => navigate('/health-plans')} icon="🛡️" color="warm" title="Health Plans" desc="Compare plans and upgrade for better coverage." />
         </div>
       </div>
     </>

@@ -1,0 +1,366 @@
+.header {
+  padding: 36px 40px;
+  background: linear-gradient(135deg, var(--blue-800), var(--blue-600));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.title {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--blue-200);
+  margin: 0;
+}
+
+.content {
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ink-500);
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--ink-300);
+}
+
+.actionBtn {
+  padding: 10px 20px;
+  background: var(--blue-600);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+}
+
+/* Timeline vertical line */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 45px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: var(--ink-200);
+  z-index: 0;
+}
+
+.recordCard {
+  display: flex;
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--ink-200);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.recordCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--blue-400);
+}
+
+.dateCol {
+  width: 90px;
+  background: var(--ink-50);
+  border-right: 1px solid var(--ink-200);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+}
+
+.monthName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red-600);
+  letter-spacing: 1px;
+}
+
+.dayNum {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink-900);
+  line-height: 1.1;
+}
+
+.yearNum {
+  font-size: 13px;
+  color: var(--ink-500);
+  margin-bottom: 8px;
+}
+
+.timeTag {
+  background: var(--blue-100);
+  color: var(--blue-800);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.detailsCol {
+  flex: 1;
+  padding: 24px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink-100);
+}
+
+.petName {
+  font-family: var(--display);
+  font-size: 20px;
+  color: var(--ink-900);
+  margin: 0 0 4px 0;
+}
+
+.species {
+  font-size: 14px;
+  color: var(--ink-500);
+  font-weight: 400;
+}
+
+.procedureName {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-700);
+}
+
+.vetBadge {
+  background: var(--ink-100);
+  color: var(--ink-700);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.gridInfo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.infoBox {
+  background: var(--ink-50);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ink-100);
+}
+
+.infoBox h4 {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ink-500);
+}
+
+.highlightText {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-900);
+  margin-bottom: 4px;
+}
+
+.subText {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-600);
+}
+
+.medicineList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.medicineTag {
+  background: white;
+  border: 1px solid var(--sky-dark);
+  color: var(--sky-dark);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px dashed var(--ink-200);
+}
+
+.notesSection {
+  font-size: 13px;
+  color: var(--ink-600);
+  max-width: 70%;
+}
+
+.billBadge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.paid {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--green-700);
+}
+
+.unpaid {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--red-700);
+}
+
+.rateBtn {
+  background: white;
+  border: 1px solid var(--gold-dark);
+  color: var(--gold-dark);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rateBtn:hover {
+  background: var(--gold-dark);
+  color: white;
+}
+
+.ratingBadge {
+  background: rgba(234, 179, 8, 0.1);
+  color: var(--gold-dark);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ratingComment {
+  font-weight: 400;
+  font-style: italic;
+  margin-left: 6px;
+  opacity: 0.8;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  width: 400px;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ink-700);
+}
+
+.formGroup textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--ink-200);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.stars {
+  display: flex;
+  gap: 8px;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.starActive {
+  color: var(--gold-dark);
+}
+
+.starInactive {
+  color: var(--ink-200);
+}
+
+.formActions {
+  text-align: right;
+}
+
+.submitBtn {
+  background: var(--blue-600);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
