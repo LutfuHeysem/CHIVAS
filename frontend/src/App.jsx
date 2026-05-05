@@ -4,6 +4,11 @@ import Login from './components/Auth/Login';
 import Dashboard from './components/Dashboard/Dashboard';
 import MyPets from './components/MyPets/MyPets';
 import BookAppointment from './components/Appointments/BookAppointment';
+import PatientRecords from './components/Veterinarian/PatientRecords';
+import Vaccinations from './components/Veterinarian/Vaccinations';
+import Schedule from './components/Veterinarian/Schedule';
+import Patients from './components/Veterinarian/Patients';
+import Referrals from './components/Veterinarian/Referrals';
 
 function App() {
   return (
@@ -16,6 +21,15 @@ function App() {
         <Route path="/" element={
           localStorage.getItem('chivas_token') ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
         } />
+        {/* Vet pages */}
+        <Route path="/vet/schedule" element={<Schedule />} />
+        <Route path="/vet/records" element={<PatientRecords />} />
+        <Route path="/vet/prescriptions" element={<PatientRecords />} />
+        <Route path="/vet/patients" element={<Patients />} />
+        <Route path="/vet/vaccinations" element={<Vaccinations />} />
+        <Route path="/vet/referrals" element={<Referrals />} />
+        {/* Fallback */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

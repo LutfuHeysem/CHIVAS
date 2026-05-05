@@ -12,7 +12,32 @@ const ROLE_LABELS = {
   ClinicManager: 'Clinic Manager',
 };
 
-
+const NAV = {
+  PetOwner: [
+    { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
+    { icon: '🐾', label: 'My Pets', path: '/owner/pets' },
+    { icon: '📅', label: 'Book Appointment', path: '/owner/book' },
+    { icon: '📋', label: 'Medical History', path: '/owner/history' },
+    { icon: '💳', label: 'Bills', path: '/owner/bills' },
+    { icon: '🛡️', label: 'Health Plans', path: '/owner/plans' },
+  ],
+  Veterinarian: [
+    { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
+    { icon: '📋', label: 'Full Schedule', path: '/vet/schedule' },
+    { icon: '🐾', label: 'My Patients', path: '/vet/patients' },
+    { icon: '🗂️', label: 'Patient Records', path: '/vet/records' },
+    { icon: '💊', label: 'Prescriptions', path: '/vet/prescriptions' },
+    { icon: '💉', label: 'Vaccinations', path: '/vet/vaccinations' },
+    { icon: '🔄', label: 'Referrals', path: '/vet/referrals' },
+  ],
+  ClinicManager: [
+    { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
+    { icon: '📊', label: 'Plan Analytics', path: '/manager/analytics' },
+    { icon: '📦', label: 'Stock & Waste', path: '/manager/inventory' },
+    { icon: '👥', label: 'Staff', path: '/manager/staff' },
+    { icon: '📄', label: 'Reports', path: '/manager/reports' },
+  ],
+};
 
 /* ════════════ SHELL ════════════ */
 const Dashboard = () => {
@@ -48,6 +73,24 @@ const Dashboard = () => {
       <div className={styles.heroBanner}>
         <div className={styles.heroGreeting}>
           Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {userName} 👋
+    <div className={`page-enter ${styles.layout}`}>
+      {/* Sidebar */}
+      <aside className={styles.sidebar}>
+        <div className={styles.sidebarTop}>
+          <div className={styles.brand}>
+            <span className={styles.brandIcon}>🐾</span> CHIVAS
+          </div>
+          <nav className={styles.nav}>
+            {navItems.map(n => (
+              <button
+                key={n.label}
+                className={`${styles.navItem} ${n.label === 'Dashboard' ? styles.active : ''}`}
+                onClick={() => n.path ? navigate(n.path) : alert('Coming soon!')}
+              >
+                <span className={styles.navEmoji}>{n.icon}</span> {n.label}
+              </button>
+            ))}
+          </nav>
         </div>
         <div className={styles.heroSub}>
           Here's what's happening in your {ROLE_LABELS[role] || ''} dashboard today.
@@ -74,6 +117,7 @@ const Dashboard = () => {
 /* ════════════ VET ════════════ */
 const VetView = ({ data }) => {
   const { stats, todaysSchedule } = data;
+  const navigate = useNavigate();
   return (
     <>
       {/* Stats */}
@@ -86,9 +130,9 @@ const VetView = ({ data }) => {
       {/* Quick Actions */}
       <div className={styles.sectionLabel}>Quick Actions</div>
       <div className={styles.quickGrid}>
-        <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>📝</span>Write Prescription</button>
-        <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>💉</span>New Vaccination Plan</button>
-        <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>🔄</span>Create Referral</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/vet/records')}><span className={styles.quickBtnIcon}>📝</span>Write Prescription</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/vet/vaccinations')}><span className={styles.quickBtnIcon}>💉</span>New Vaccination Plan</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/vet/referrals')}><span className={styles.quickBtnIcon}>🔄</span>Create Referral</button>
       </div>
 
       {/* Schedule + Features */}
@@ -117,10 +161,11 @@ const VetView = ({ data }) => {
         </div>
 
         <div className={styles.featureLinks}>
-          <Feature icon="📋" color="blue" title="Full Schedule" desc="View all upcoming appointments and history." />
-          <Feature icon="🗂️" color="green" title="Patient Records" desc="Search pet histories, diagnoses, and prescriptions." />
-          <Feature icon="💉" color="warm" title="Vaccinations" desc="Manage vaccination plans and follow-up items." />
-          <Feature icon="🔄" color="gold" title="Referrals" desc="Open referral cases from other veterinarians." />
+          <Feature icon="📋" color="blue" title="Full Schedule" desc="View all upcoming appointments and history." onClick={() => navigate('/vet/schedule')} />
+          <Feature icon="🐾" color="sky" title="My Patients" desc="Browse unique patients with detailed profiles." onClick={() => navigate('/vet/patients')} />
+          <Feature icon="🗂️" color="green" title="Patient Records" desc="Search pet histories, diagnoses, and prescriptions." onClick={() => navigate('/vet/records')} />
+          <Feature icon="💉" color="warm" title="Vaccinations" desc="Manage vaccination plans and follow-up items." onClick={() => navigate('/vet/vaccinations')} />
+          <Feature icon="🔄" color="gold" title="Referrals" desc="Send and receive inter-clinic patient referrals." onClick={() => navigate('/vet/referrals')} />
         </div>
       </div>
     </>

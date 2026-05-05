@@ -60,6 +60,7 @@ namespace ChivasApi.Controllers
                            a.time       AS Time,
                            a.procedure_name AS ProcedureName,
                            a.follow_up_notes AS FollowUpNotes,
+                           p.pet_id     AS PetId,
                            p.name       AS PetName,
                            p.species    AS PetSpecies,
                            CONCAT(oper.first_name, ' ', oper.surname) AS OwnerName
@@ -138,7 +139,7 @@ namespace ChivasApi.Controllers
                     new { req.PetId, OwnerId = userId });
 
                 if (owns == 0)
-                    return Forbid("You do not own this pet.");
+                    return BadRequest("You do not own this pet.");
             }
 
             // ── RAW SQL: Insert appointment (triggers will validate limits) ──
