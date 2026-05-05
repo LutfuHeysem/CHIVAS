@@ -45,12 +45,12 @@ namespace ChivasApi.Controllers
         {
             // ── RAW SQL: Fetch all pets for this owner ──
             const string petsSql = @"
-                SELECT pet_id   AS PetId,
-                       name     AS Name,
-                       species  AS Species,
-                       breed    AS Breed,
-                       age      AS Age,
-                       sex      AS Sex
+                SELECT pet_id   AS petId,
+                       name     AS name,
+                       species  AS species,
+                       breed    AS breed,
+                       age      AS age,
+                       sex      AS sex
                 FROM Pet
                 WHERE owner_id = @OwnerId";
 
@@ -77,8 +77,8 @@ namespace ChivasApi.Controllers
 
             // ── RAW SQL: Get health plan name via LEFT JOIN ──
             const string planSql = @"
-                SELECT COALESCE(hp.name, 'No Plan') AS PlanName,
-                       po.balance AS Balance
+                SELECT COALESCE(hp.name, 'No Plan') AS planName,
+                       po.balance AS balance
                 FROM Pet_Owner po
                 LEFT JOIN Health_Plan hp ON po.plan_id = hp.plan_id
                 WHERE po.owner_id = @OwnerId";
@@ -87,12 +87,12 @@ namespace ChivasApi.Controllers
 
             // ── RAW SQL: Fetch next 5 upcoming appointments with JOINs ──
             const string appointmentsSql = @"
-                SELECT a.appntm_id AS AppntmId,
-                       DATE_FORMAT(a.date, '%Y-%m-%d') AS Date,
-                       TIME_FORMAT(a.time, '%H:%i') AS Time,
-                       p.name AS PetName,
-                       CONCAT(per.first_name, ' ', per.surname) AS VetName,
-                       a.procedure_name AS ProcedureName
+                SELECT a.appntm_id AS appntmId,
+                       DATE_FORMAT(a.date, '%Y-%m-%d') AS date,
+                       TIME_FORMAT(a.time, '%H:%i') AS time,
+                       p.name AS petName,
+                       CONCAT(per.first_name, ' ', per.surname) AS vetName,
+                       a.procedure_name AS procedureName
                 FROM Appointment a
                 INNER JOIN Pet p          ON a.pet_id = p.pet_id
                 INNER JOIN Veterinarian v ON a.vet_id = v.vet_id
@@ -113,8 +113,8 @@ namespace ChivasApi.Controllers
                     TotalPets = pets.Count,
                     UpcomingAppointmentCount = upcomingCount,
                     TotalAppointments = totalAppointments,
-                    Balance = (decimal)(planRow?.Balance ?? 0m),
-                    HealthPlan = (string)(planRow?.PlanName ?? "No Plan")
+                    Balance = (decimal)(planRow?.balance ?? 0m),
+                    HealthPlan = (string)(planRow?.planName ?? "No Plan")
                 },
                 Pets = pets,
                 UpcomingAppointments = appointments
@@ -128,12 +128,12 @@ namespace ChivasApi.Controllers
         {
             // ── RAW SQL: Today's schedule with multiple JOINs ──
             const string scheduleSql = @"
-                SELECT a.appntm_id AS AppntmId,
-                       TIME_FORMAT(a.time, '%H:%i') AS Time,
-                       p.name      AS PetName,
-                       COALESCE(p.species, 'Unknown') AS Species,
-                       CONCAT(oper.first_name, ' ', oper.surname) AS OwnerName,
-                       a.procedure_name AS ProcedureName
+                SELECT a.appntm_id AS appntmId,
+                       TIME_FORMAT(a.time, '%H:%i') AS time,
+                       p.name      AS petName,
+                       COALESCE(p.species, 'Unknown') AS species,
+                       CONCAT(oper.first_name, ' ', oper.surname) AS ownerName,
+                       a.procedure_name AS procedureName
                 FROM Appointment a
                 INNER JOIN Pet p           ON a.pet_id = p.pet_id
                 INNER JOIN Pet_Owner po    ON p.owner_id = po.owner_id
@@ -191,12 +191,12 @@ namespace ChivasApi.Controllers
 
             // ── RAW SQL: Recent 5 appointments with full JOIN chain ──
             const string recentSql = @"
-                SELECT a.appntm_id AS AppntmId,
-                       DATE_FORMAT(a.date, '%Y-%m-%d') AS Date,
-                       TIME_FORMAT(a.time, '%H:%i') AS Time,
-                       p.name AS PetName,
-                       CONCAT(vper.first_name, ' ', vper.surname) AS VetName,
-                       a.procedure_name AS ProcedureName
+                SELECT a.appntm_id AS appntmId,
+                       DATE_FORMAT(a.date, '%Y-%m-%d') AS date,
+                       TIME_FORMAT(a.time, '%H:%i') AS time,
+                       p.name AS petName,
+                       CONCAT(vper.first_name, ' ', vper.surname) AS vetName,
+                       a.procedure_name AS procedureName
                 FROM Appointment a
                 INNER JOIN Pet p            ON a.pet_id = p.pet_id
                 INNER JOIN Veterinarian v   ON a.vet_id = v.vet_id

@@ -96,6 +96,25 @@ namespace ChivasApi.Controllers
             return Ok(rows);
         }
 
+        [HttpGet("available-vets")]
+        public async Task<IActionResult> GetAvailableVets()
+        {
+            await _db.OpenAsync();
+
+            // ── RAW SQL: Fetch all veterinarians ──
+            const string sql = @"
+                SELECT v.vet_id AS vetId,
+                       CONCAT(p.first_name, ' ', p.surname) AS name,
+                       v.specialty AS specialty
+                FROM Veterinarian v
+                INNER JOIN Staff s ON v.vet_id = s.staff_id
+                INNER JOIN Person p ON s.staff_id = p.person_id
+                ORDER BY p.first_name";
+
+            var vets = await _db.QueryAsync(sql);
+            return Ok(vets);
+        }
+
         [HttpPost("book")]
         [Authorize(Roles = "PetOwner,ClinicManager")]
         public async Task<IActionResult> BookAppointment([FromBody] BookAppointmentRequest req)

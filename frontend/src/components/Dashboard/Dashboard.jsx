@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './Dashboard.module.css';
+import Layout from '../Layout/Layout';
 
 const API = 'http://localhost:8080';
 
@@ -11,31 +12,7 @@ const ROLE_LABELS = {
   ClinicManager: 'Clinic Manager',
 };
 
-const NAV = {
-  PetOwner: [
-    { icon: '🏠', label: 'Dashboard' },
-    { icon: '🐾', label: 'My Pets' },
-    { icon: '📅', label: 'Book Appointment' },
-    { icon: '📋', label: 'Medical History' },
-    { icon: '💳', label: 'Bills' },
-    { icon: '🛡️', label: 'Health Plans' },
-  ],
-  Veterinarian: [
-    { icon: '🏠', label: 'Dashboard' },
-    { icon: '📋', label: 'Schedule' },
-    { icon: '🗂️', label: 'Patient Records' },
-    { icon: '💊', label: 'Prescriptions' },
-    { icon: '💉', label: 'Vaccinations' },
-    { icon: '🔄', label: 'Referrals' },
-  ],
-  ClinicManager: [
-    { icon: '🏠', label: 'Dashboard' },
-    { icon: '📊', label: 'Plan Analytics' },
-    { icon: '📦', label: 'Stock & Waste' },
-    { icon: '👥', label: 'Staff' },
-    { icon: '📄', label: 'Reports' },
-  ],
-};
+
 
 /* ════════════ SHELL ════════════ */
 const Dashboard = () => {
@@ -66,68 +43,31 @@ const Dashboard = () => {
     navigate('/login');
   };
 
-  const navItems = NAV[role] || NAV.PetOwner;
-
   return (
-    <div className={`page-enter ${styles.layout}`}>
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        <div className={styles.sidebarTop}>
-          <div className={styles.brand}>
-            <span className={styles.brandIcon}>🐾</span> CHIVAS
-          </div>
-          <nav className={styles.nav}>
-            {navItems.map(n => (
-              <button
-                key={n.label}
-                className={`${styles.navItem} ${n.label === 'Dashboard' ? styles.active : ''}`}
-              >
-                <span className={styles.navEmoji}>{n.icon}</span> {n.label}
-              </button>
-            ))}
-          </nav>
+    <Layout>
+      <div className={styles.heroBanner}>
+        <div className={styles.heroGreeting}>
+          Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {userName} 👋
         </div>
-        <div className={styles.sidebarFooter}>
-          <div className={styles.userInfo}>
-            <div className={styles.avatar}>{userName?.charAt(0) || 'U'}</div>
-            <div>
-              <div className={styles.userName}>{userName || 'User'}</div>
-              <div className={styles.userRole}>{ROLE_LABELS[role] || role}</div>
-            </div>
-          </div>
-          <button className={styles.logoutBtn} onClick={handleLogout}>
-            <span>🚪</span> Logout
-          </button>
+        <div className={styles.heroSub}>
+          Here's what's happening in your {ROLE_LABELS[role] || ''} dashboard today.
         </div>
-      </aside>
+      </div>
 
-      {/* Main */}
-      <main className={styles.mainContent}>
-        {/* Hero */}
-        <div className={styles.heroBanner}>
-          <div className={styles.heroGreeting}>
-            Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {userName} 👋
-          </div>
-          <div className={styles.heroSub}>
-            Here's what's happening in your {ROLE_LABELS[role] || ''} dashboard today.
-          </div>
-        </div>
-
-        <div className={styles.content}>
-          {loading ? (
-            <div className={styles.emptyState}>Loading your dashboard…</div>
-          ) : !data ? (
-            <div className={styles.emptyState}>Could not load dashboard data.</div>
-          ) : (
-            <>
-              {role === 'Veterinarian' && <VetView data={data} />}
-              {role === 'PetOwner' && <OwnerView data={data} />}
-              {role === 'ClinicManager' && <ManagerView data={data} />}
-            </>
-          )}
-        </div>
-      </main>
-    </div>
+      <div className={styles.content}>
+        {loading ? (
+          <div className={styles.emptyState}>Loading your dashboard…</div>
+        ) : !data ? (
+          <div className={styles.emptyState}>Could not load dashboard data.</div>
+        ) : (
+          <>
+            {role === 'Veterinarian' && <VetView data={data} />}
+            {role === 'PetOwner' && <OwnerView data={data} />}
+            {role === 'ClinicManager' && <ManagerView data={data} />}
+          </>
+        )}
+      </div>
+    </Layout>
   );
 };
 
@@ -189,6 +129,7 @@ const VetView = ({ data }) => {
 
 /* ════════════ OWNER ════════════ */
 const OwnerView = ({ data }) => {
+  const navigate = useNavigate();
   const { stats, pets, upcomingAppointments } = data;
   return (
     <>
@@ -200,8 +141,8 @@ const OwnerView = ({ data }) => {
 
       <div className={styles.sectionLabel}>Quick Actions</div>
       <div className={styles.quickGrid}>
-        <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>📅</span>Book Appointment</button>
-        <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>🐾</span>Add New Pet</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/book-appointment')}><span className={styles.quickBtnIcon}>📅</span>Book Appointment</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/my-pets')}><span className={styles.quickBtnIcon}>🐾</span>Add New Pet</button>
         <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>💳</span>Pay Outstanding Bill</button>
       </div>
 
@@ -228,7 +169,7 @@ const OwnerView = ({ data }) => {
         </div>
 
         <div className={styles.featureLinks}>
-          <Feature icon="🐾" color="green" title="My Pets" desc="View pet profiles, health records, and vaccinations." />
+          <Feature onClick={() => navigate('/my-pets')} icon="🐾" color="green" title="My Pets" desc="View pet profiles, health records, and vaccinations." />
           <Feature icon="📋" color="blue" title="Medical History" desc="Timeline of past visits, diagnoses, and treatments." />
           <Feature icon="💳" color="gold" title="Bills & Payments" desc="View invoices and health plan discounts." />
           <Feature icon="🛡️" color="warm" title="Health Plans" desc="Compare plans and upgrade for better coverage." />
@@ -307,8 +248,8 @@ const Stat = ({ icon, color, label, value }) => (
   </div>
 );
 
-const Feature = ({ icon, color, title, desc }) => (
-  <button className={styles.featureLink}>
+const Feature = ({ icon, color, title, desc, onClick }) => (
+  <button className={styles.featureLink} onClick={onClick}>
     <div className={`${styles.featureLinkIcon} ${styles[color]}`}>{icon}</div>
     <div className={styles.featureLinkText}>
       <h4>{title}</h4>
