@@ -48,8 +48,36 @@ INSERT INTO Branch_Stock (branch_id, med_id, stock_amount) VALUES
 (1, 1, 50),
 (1, 2, 20);
 
--- Insert Appointment
-INSERT INTO Appointment (date, time, procedure_name, follow_up_notes, pet_id, vet_id) VALUES 
-('2026-05-10', '10:00:00', 'General Checkup', 'Looks healthy', 1, 1);
+-- Insert Appointments
+INSERT INTO Appointment (appntm_id, date, time, procedure_name, follow_up_notes, pet_id, vet_id) VALUES 
+(1, '2026-05-10', '10:00:00', 'General Checkup', 'Looks healthy', 1, 1),
+(2, '2025-10-15', '14:30:00', 'Annual Checkup', 'Dog is healthy', 1, 1),
+(3, '2026-01-20', '09:15:00', 'Dental Cleaning', 'Slight plaque buildup', 1, 1),
+(4, '2026-04-05', '11:00:00', 'Flea Treatment', 'Apply drops monthly', 2, 1);
 
--- Note: Other procedures and triggers can be tested manually using this seeded data.
+-- Insert Bills
+INSERT INTO Bill (type, amount, status, payment_date, appntm_id) VALUES 
+('Consultation', 150.00, 'Paid', '2025-10-15', 2),
+('Surgery', 450.00, 'Unpaid', NULL, 3),
+('Pharmacy', 75.00, 'Unpaid', NULL, 4);
+
+-- Insert Ratings
+INSERT INTO Rating (score, comment, owner_id, vet_id, appntm_id) VALUES 
+(5, 'Dr. Ahmet was very gentle with Karabas!', 3, 1, 2);
+
+-- Insert Vaccines and Plans
+INSERT INTO Vaccine (vaccine_id, type, cycle_protocol) VALUES 
+(1, 'Rabies', '1 Year'),
+(2, 'Distemper', '3 Years'),
+(3, 'Parvovirus', '1 Year');
+
+INSERT INTO Vaccination_Plan (plan_id, creation_date, pet_id, vet_id) VALUES 
+(1, '2025-10-15', 1, 1),
+(2, '2026-04-05', 2, 1);
+
+INSERT INTO Plan_Vaccine (plan_id, vaccine_id, planned_date, status, dose_number) VALUES 
+(1, 1, '2025-10-15', 'Administered', 1),
+(1, 1, '2026-10-15', 'Pending', 2),
+(1, 2, '2025-10-15', 'Administered', 1),
+(1, 3, '2026-05-01', 'Missed', 1),
+(2, 2, '2026-04-05', 'Administered', 1);

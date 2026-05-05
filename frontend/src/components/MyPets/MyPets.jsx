@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Layout from '../Layout/Layout';
 import styles from './MyPets.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const API = 'http://localhost:8080';
 
 const MyPets = () => {
   const [pets, setPets] = useState([]);
+  const [vaccinations, setVaccinations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -18,22 +21,24 @@ const MyPets = () => {
     age: ''
   });
 
-  const fetchPets = async () => {
+  const fetchPetsAndVaccines = async () => {
     try {
       const token = localStorage.getItem('chivas_token');
-      const res = await axios.get(`${API}/api/pets`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setPets(res.data);
+      const [petRes, vacRes] = await Promise.all([
+        axios.get(`${API}/api/pets`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API}/api/vaccinations/my`, { headers: { Authorization: `Bearer ${token}` } })
+      ]);
+      setPets(petRes.data);
+      setVaccinations(vacRes.data);
     } catch (err) {
-      console.error('Failed to fetch pets', err);
+      console.error('Failed to fetch data', err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPets();
+    fetchPetsAndVaccines();
   }, []);
 
   const handleChange = (e) => {
@@ -52,9 +57,23 @@ const MyPets = () => {
       });
       setShowModal(false);
       setFormData({ name: '', species: '', breed: '', allergies: '', sex: 'Unknown', age: '' });
-      fetchPets();
+      fetchPetsAndVaccines();
     } catch (err) {
       alert('Failed to add pet');
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async (petId, petName) => {
+    if (!window.confirm(`Are you sure you want to delete ${petName}? This will permanently delete their medical history as well.`)) return;
+    try {
+      const token = localStorage.getItem('chivas_token');
+      await axios.delete(`${API}/api/pets/${petId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchPetsAndVaccines();
+    } catch (err) {
+      alert('Failed to delete pet');
       console.error(err);
     }
   };
@@ -80,12 +99,21 @@ const MyPets = () => {
           <div className={styles.grid}>
             {pets.map(pet => (
               <div key={pet.petId} className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <div className={styles.avatar}>{pet.name ? pet.name.charAt(0) : '?'}</div>
-                  <div>
-                    <div className={styles.petName}>{pet.name}</div>
-                    <div className={styles.petSpecies}>{pet.species} • {pet.breed || 'Unknown breed'}</div>
+                <div className={styles.cardHeader} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div className={styles.avatar}>{pet.name ? pet.name.charAt(0) : '?'}</div>
+                    <div>
+                      <div className={styles.petName}>{pet.name}</div>
+                      <div className={styles.petSpecies}>{pet.species} • {pet.breed || 'Unknown breed'}</div>
+                    </div>
                   </div>
+                  <button 
+                    onClick={() => handleDelete(pet.petId, pet.name)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: 'var(--red-600)', padding: '4px' }}
+                    title="Delete Pet"
+                  >
+                    🗑️
+                  </button>
                 </div>
                 <div className={styles.cardBody}>
                   <div className={styles.infoRow}>
@@ -99,6 +127,40 @@ const MyPets = () => {
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Allergies</span>
                     <span className={styles.infoValue}>{pet.allergies || 'None'}</span>
+                  </div>
+
+                  {/* Vaccinations Section */}
+                  <div className={styles.vaccineSection}>
+                    <h4>💉 Vaccinations</h4>
+                    {vaccinations.filter(v => v.petId === pet.petId).length === 0 ? (
+                      <p className={styles.subText}>No vaccination plan found.</p>
+                    ) : (
+                      <div className={styles.vaccineList}>
+                        {vaccinations.filter(v => v.petId === pet.petId).map((v, i) => {
+                           const isOverdue = v.status === 'Pending' && new Date(v.plannedDate) < new Date(new Date().setHours(0,0,0,0));
+                           let badgeClass = styles.vacPending;
+                           let statusIcon = '⏳';
+                           if (v.status === 'Administered') { badgeClass = styles.vacAdministered; statusIcon = '✅'; }
+                           if (isOverdue || v.status === 'Missed') { badgeClass = styles.vacOverdue; statusIcon = '⚠️'; }
+                           
+                           return (
+                             <div key={i} className={`${styles.vaccineItem} ${badgeClass}`}>
+                               <div>
+                                 <span style={{marginRight: '6px'}}>{statusIcon}</span>
+                                 <strong>{v.vaccineName}</strong> <span style={{opacity: 0.8}}>(Dose {v.doseNumber})</span>
+                               </div>
+                               <div style={{fontSize: '12px', fontWeight: 'bold'}}>{v.plannedDate}</div>
+                             </div>
+                           )
+                        })}
+                      </div>
+                    )}
+                    <button 
+                      className={styles.bookVacBtn} 
+                      onClick={() => navigate('/book-appointment')}
+                    >
+                      📅 Book Vaccination
+                    </button>
                   </div>
                 </div>
               </div>

@@ -105,6 +105,26 @@ namespace ChivasApi.Controllers
 
             return Ok(new { PetId = newId, Message = "Pet added successfully." });
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> DeletePet(int id)
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdStr, out int userId))
+                return Unauthorized();
+
+            await _db.OpenAsync();
+
+            // RAW SQL: Delete pet and cascade will handle the rest
+            const string sql = "DELETE FROM Pet WHERE pet_id = @PetId AND owner_id = @OwnerId";
+            var affected = await _db.ExecuteAsync(sql, new { PetId = id, OwnerId = userId });
+
+            if (affected == 0)
+                return NotFound("Pet not found or you do not have permission to delete it.");
+
+            return Ok(new DeletePetResponse { Message = "Pet deleted successfully." });
+        }
     }
 
     public class AddPetRequest
@@ -115,5 +135,10 @@ namespace ChivasApi.Controllers
         public string? Allergies { get; set; }
         public string? Sex { get; set; }
         public int? Age { get; set; }
+    }
+
+    public class DeletePetResponse
+    {
+        public string Message { get; set; } = null!;
     }
 }

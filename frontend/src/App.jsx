@@ -9,7 +9,12 @@ import Vaccinations from './components/Veterinarian/Vaccinations';
 import Schedule from './components/Veterinarian/Schedule';
 import Patients from './components/Veterinarian/Patients';
 import Referrals from './components/Veterinarian/Referrals';
+import MedicalHistory from './components/MedicalHistory/MedicalHistory';
+import Bills from './components/Bills/Bills';
+import HealthPlans from './components/HealthPlans/HealthPlans';
+
 import CompleteAppointment from './components/Veterinarian/CompleteAppointment';
+
 
 function App() {
   return (
@@ -19,6 +24,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/my-pets" element={<MyPets />} />
         <Route path="/book-appointment" element={<BookAppointment />} />
+        <Route path="/medical-history" element={<MedicalHistory />} />
+        <Route path="/bills" element={<Bills />} />
+        <Route path="/health-plans" element={<HealthPlans />} />
         <Route path="/" element={
           localStorage.getItem('chivas_token') ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
         } />

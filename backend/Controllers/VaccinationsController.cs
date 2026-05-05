@@ -18,6 +18,7 @@ namespace ChivasApi.Controllers
             _db = db;
         }
 
+<<<<<<< Updated upstream
         [HttpGet("pet/{petId}")]
         public async Task<IActionResult> GetVaccinations(int petId)
         {
@@ -137,5 +138,34 @@ namespace ChivasApi.Controllers
         public int VaccineId { get; set; }
         public int DoseNumber { get; set; }
         public string Status { get; set; } = null!;
+=======
+        [HttpGet("my")]
+        [Authorize(Roles = "PetOwner")]
+        public async Task<IActionResult> GetMyVaccinations()
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdStr, out int userId))
+                return Unauthorized();
+
+            await _db.OpenAsync();
+
+            const string sql = @"
+                SELECT 
+                    vp.pet_id AS petId,
+                    v.type AS vaccineName,
+                    DATE_FORMAT(pv.planned_date, '%Y-%m-%d') AS plannedDate,
+                    pv.status AS status,
+                    pv.dose_number AS doseNumber
+                FROM Plan_Vaccine pv
+                INNER JOIN Vaccine v ON pv.vaccine_id = v.vaccine_id
+                INNER JOIN Vaccination_Plan vp ON pv.plan_id = vp.plan_id
+                INNER JOIN Pet p ON vp.pet_id = p.pet_id
+                WHERE p.owner_id = @UserId
+                ORDER BY pv.planned_date ASC";
+
+            var vaccines = await _db.QueryAsync(sql, new { UserId = userId });
+            return Ok(vaccines);
+        }
+>>>>>>> Stashed changes
     }
 }
