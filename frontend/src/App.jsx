@@ -15,6 +15,11 @@ import HealthPlans from './components/HealthPlans/HealthPlans';
 
 import CompleteAppointment from './components/Veterinarian/CompleteAppointment';
 
+import Analytics from './components/ClinicManager/Analytics';
+import Inventory from './components/ClinicManager/Inventory';
+import Staff from './components/ClinicManager/Staff';
+import Reports from './components/ClinicManager/Reports';
+
 
 function App() {
   return (
@@ -37,6 +42,13 @@ function App() {
         <Route path="/vet/vaccinations" element={<Vaccinations />} />
         <Route path="/vet/referrals" element={<Referrals />} />
         <Route path="/vet/complete/:appointmentId" element={<CompleteAppointment />} />
+        
+        {/* Manager pages */}
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/inventory" element={<Inventory />} />
+        <Route path="/staff" element={<Staff />} />
+        <Route path="/reports" element={<Reports />} />
+        
         {/* Fallback */}
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>

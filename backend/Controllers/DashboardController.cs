@@ -210,6 +210,23 @@ namespace ChivasApi.Controllers
 
             var recent = await _db.QueryAsync(recentSql);
 
+            // ── RAW SQL: Unpaid Bills for Financial Tracking ──
+            const string billsSql = @"
+                SELECT b.bill_id AS billId,
+                       b.type AS type,
+                       b.amount AS amount,
+                       DATE_FORMAT(a.date, '%Y-%m-%d') AS appointmentDate,
+                       CONCAT(oper.first_name, ' ', oper.surname) AS ownerName
+                FROM Bill b
+                INNER JOIN Appointment a ON b.appntm_id = a.appntm_id
+                INNER JOIN Pet p ON a.pet_id = p.pet_id
+                INNER JOIN Pet_Owner po ON p.owner_id = po.owner_id
+                INNER JOIN Person oper ON po.owner_id = oper.person_id
+                WHERE b.status = 'Unpaid'
+                ORDER BY a.date ASC
+                LIMIT 5";
+            var unpaidBills = await _db.QueryAsync(billsSql);
+
             return new
             {
                 Role = "ClinicManager",
@@ -221,7 +238,8 @@ namespace ChivasApi.Controllers
                     TotalAppointments = (int)(stats.TotalAppointments),
                     TodaysAppointments = (int)(stats.TodaysAppointments)
                 },
-                RecentAppointments = recent
+                RecentAppointments = recent,
+                UnpaidBills = unpaidBills
             };
         }
     }

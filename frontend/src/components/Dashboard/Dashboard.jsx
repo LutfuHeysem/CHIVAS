@@ -177,7 +177,7 @@ const OwnerView = ({ data }) => {
 
 /* ════════════ MANAGER ════════════ */
 const ManagerView = ({ data }) => {
-  const { stats, recentAppointments } = data;
+  const { stats, recentAppointments, unpaidBills } = data;
   return (
     <>
       <div className={styles.bentoGrid}>
@@ -220,11 +220,25 @@ const ManagerView = ({ data }) => {
           )}
         </div>
 
-        <div className={styles.featureLinks}>
-          <Feature icon="📊" color="blue" title="Plan Analytics" desc="Subscriber stats and marketing targets." />
-          <Feature icon="📦" color="green" title="Stock & Waste" desc="Inventory levels, expiry dates, and waste logs." />
-          <Feature icon="👥" color="warm" title="Staff Management" desc="Vet profiles, branch assignments, and ratings." />
-          <Feature icon="📄" color="berry" title="Reports" desc="Export performance and financial reports." />
+        <div className={styles.schedulePanel}>
+          <div className={styles.scheduleTitle}>Financial Alerts</div>
+          <div className={styles.scheduleSub}>Pending unpaid bills</div>
+          {!unpaidBills || unpaidBills.length === 0 ? (
+            <div className={styles.emptyState}>No unpaid bills.</div>
+          ) : (
+            <div className={styles.timeline}>
+              {unpaidBills.map(b => (
+                <div key={b.billId} className={styles.timelineItem}>
+                  <div className={styles.timelineDot} style={{ background: 'var(--warn-dark)', borderColor: 'var(--warn-light)' }} />
+                  <div className={styles.timelineContent}>
+                    <div className={styles.timelineTime}>{b.appointmentDate}</div>
+                    <div className={styles.timelinePet} style={{ color: 'var(--warn-dark)' }}>${b.amount.toFixed(2)} - {b.type}</div>
+                    <div className={styles.timelineDetail}>Billed to: {b.ownerName}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>
