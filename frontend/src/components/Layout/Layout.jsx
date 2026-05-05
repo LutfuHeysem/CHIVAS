@@ -19,11 +19,11 @@ const NAV = {
   ],
   Veterinarian: [
     { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
-    { icon: '📋', label: 'Schedule', path: '/schedule' },
-    { icon: '🗂️', label: 'Patient Records', path: '/patient-records' },
-    { icon: '💊', label: 'Prescriptions', path: '/prescriptions' },
-    { icon: '💉', label: 'Vaccinations', path: '/vaccinations' },
-    { icon: '🔄', label: 'Referrals', path: '/referrals' },
+    { icon: '📋', label: 'Full Schedule', path: '/vet/schedule' },
+    { icon: '🐾', label: 'My Patients', path: '/vet/patients' },
+    { icon: '🗂️', label: 'Patient Records', path: '/vet/records' },
+    { icon: '💉', label: 'Vaccinations', path: '/vet/vaccinations' },
+    { icon: '🔄', label: 'Referrals', path: '/vet/referrals' },
   ],
   ClinicManager: [
     { icon: '🏠', label: 'Dashboard', path: '/dashboard' },

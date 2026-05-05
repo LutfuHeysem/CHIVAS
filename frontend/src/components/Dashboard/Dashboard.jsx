@@ -12,33 +12,6 @@ const ROLE_LABELS = {
   ClinicManager: 'Clinic Manager',
 };
 
-const NAV = {
-  PetOwner: [
-    { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
-    { icon: '🐾', label: 'My Pets', path: '/owner/pets' },
-    { icon: '📅', label: 'Book Appointment', path: '/owner/book' },
-    { icon: '📋', label: 'Medical History', path: '/owner/history' },
-    { icon: '💳', label: 'Bills', path: '/owner/bills' },
-    { icon: '🛡️', label: 'Health Plans', path: '/owner/plans' },
-  ],
-  Veterinarian: [
-    { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
-    { icon: '📋', label: 'Full Schedule', path: '/vet/schedule' },
-    { icon: '🐾', label: 'My Patients', path: '/vet/patients' },
-    { icon: '🗂️', label: 'Patient Records', path: '/vet/records' },
-    { icon: '💊', label: 'Prescriptions', path: '/vet/prescriptions' },
-    { icon: '💉', label: 'Vaccinations', path: '/vet/vaccinations' },
-    { icon: '🔄', label: 'Referrals', path: '/vet/referrals' },
-  ],
-  ClinicManager: [
-    { icon: '🏠', label: 'Dashboard', path: '/dashboard' },
-    { icon: '📊', label: 'Plan Analytics', path: '/manager/analytics' },
-    { icon: '📦', label: 'Stock & Waste', path: '/manager/inventory' },
-    { icon: '👥', label: 'Staff', path: '/manager/staff' },
-    { icon: '📄', label: 'Reports', path: '/manager/reports' },
-  ],
-};
-
 /* ════════════ SHELL ════════════ */
 const Dashboard = () => {
   const [data, setData] = useState(null);
@@ -63,34 +36,12 @@ const Dashboard = () => {
       .finally(() => setLoading(false));
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/login');
-  };
-
   return (
     <Layout>
+      {/* Hero */}
       <div className={styles.heroBanner}>
         <div className={styles.heroGreeting}>
           Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {userName} 👋
-    <div className={`page-enter ${styles.layout}`}>
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        <div className={styles.sidebarTop}>
-          <div className={styles.brand}>
-            <span className={styles.brandIcon}>🐾</span> CHIVAS
-          </div>
-          <nav className={styles.nav}>
-            {navItems.map(n => (
-              <button
-                key={n.label}
-                className={`${styles.navItem} ${n.label === 'Dashboard' ? styles.active : ''}`}
-                onClick={() => n.path ? navigate(n.path) : alert('Coming soon!')}
-              >
-                <span className={styles.navEmoji}>{n.icon}</span> {n.label}
-              </button>
-            ))}
-          </nav>
         </div>
         <div className={styles.heroSub}>
           Here's what's happening in your {ROLE_LABELS[role] || ''} dashboard today.
@@ -130,7 +81,7 @@ const VetView = ({ data }) => {
       {/* Quick Actions */}
       <div className={styles.sectionLabel}>Quick Actions</div>
       <div className={styles.quickGrid}>
-        <button className={styles.quickBtn} onClick={() => navigate('/vet/records')}><span className={styles.quickBtnIcon}>📝</span>Write Prescription</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/vet/schedule')}><span className={styles.quickBtnIcon}>📅</span>Complete Appointment</button>
         <button className={styles.quickBtn} onClick={() => navigate('/vet/vaccinations')}><span className={styles.quickBtnIcon}>💉</span>New Vaccination Plan</button>
         <button className={styles.quickBtn} onClick={() => navigate('/vet/referrals')}><span className={styles.quickBtnIcon}>🔄</span>Create Referral</button>
       </div>

@@ -92,7 +92,8 @@ namespace ChivasApi.Controllers
                        TIME_FORMAT(a.time, '%H:%i') AS time,
                        p.name AS petName,
                        CONCAT(per.first_name, ' ', per.surname) AS vetName,
-                       a.procedure_name AS procedureName
+                       a.procedure_name AS procedureName,
+                       a.status AS status
                 FROM Appointment a
                 INNER JOIN Pet p          ON a.pet_id = p.pet_id
                 INNER JOIN Veterinarian v ON a.vet_id = v.vet_id
@@ -133,7 +134,8 @@ namespace ChivasApi.Controllers
                        p.name      AS petName,
                        COALESCE(p.species, 'Unknown') AS species,
                        CONCAT(oper.first_name, ' ', oper.surname) AS ownerName,
-                       a.procedure_name AS procedureName
+                       a.procedure_name AS procedureName,
+                       a.status AS status
                 FROM Appointment a
                 INNER JOIN Pet p           ON a.pet_id = p.pet_id
                 INNER JOIN Pet_Owner po    ON p.owner_id = po.owner_id
@@ -196,7 +198,8 @@ namespace ChivasApi.Controllers
                        TIME_FORMAT(a.time, '%H:%i') AS time,
                        p.name AS petName,
                        CONCAT(vper.first_name, ' ', vper.surname) AS vetName,
-                       a.procedure_name AS procedureName
+                       a.procedure_name AS procedureName,
+                       a.status AS status
                 FROM Appointment a
                 INNER JOIN Pet p            ON a.pet_id = p.pet_id
                 INNER JOIN Veterinarian v   ON a.vet_id = v.vet_id

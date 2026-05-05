@@ -39,6 +39,7 @@ namespace ChivasApi.Controllers
                            a.time       AS Time,
                            a.procedure_name AS ProcedureName,
                            a.follow_up_notes AS FollowUpNotes,
+                           a.status     AS Status,
                            p.name       AS PetName,
                            p.species    AS PetSpecies,
                            CONCAT(per.first_name, ' ', per.surname) AS VetName
@@ -60,6 +61,7 @@ namespace ChivasApi.Controllers
                            a.time       AS Time,
                            a.procedure_name AS ProcedureName,
                            a.follow_up_notes AS FollowUpNotes,
+                           a.status     AS Status,
                            p.pet_id     AS PetId,
                            p.name       AS PetName,
                            p.species    AS PetSpecies,
@@ -79,6 +81,7 @@ namespace ChivasApi.Controllers
                            a.date       AS Date,
                            a.time       AS Time,
                            a.procedure_name AS ProcedureName,
+                           a.status     AS Status,
                            p.name       AS PetName,
                            CONCAT(vper.first_name, ' ', vper.surname) AS VetName,
                            CONCAT(oper.first_name, ' ', oper.surname) AS OwnerName
@@ -167,6 +170,24 @@ namespace ChivasApi.Controllers
                 // Catches trigger-raised errors (daily limit, unpaid bills, etc.)
                 return BadRequest(new { Error = "Booking failed", Details = ex.Message });
             }
+        }
+        
+        [HttpPut("{id}/complete")]
+        [Authorize(Roles = "Veterinarian")]
+        public async Task<IActionResult> CompleteAppointment(int id)
+        {
+            var vetIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(vetIdStr, out int vetId)) return Unauthorized();
+
+            await _db.OpenAsync();
+            
+            // ── RAW SQL: Verify ownership and update status ──
+            const string sql = "UPDATE Appointment SET status = 'Completed' WHERE appntm_id = @Id AND vet_id = @VetId";
+            var affected = await _db.ExecuteAsync(sql, new { Id = id, VetId = vetId });
+
+            if (affected == 0) return BadRequest("Could not complete appointment. Make sure you are the assigned vet.");
+            
+            return Ok(new { Message = "Appointment marked as completed." });
         }
     }
 
