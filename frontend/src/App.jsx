@@ -9,6 +9,7 @@ import Vaccinations from './components/Veterinarian/Vaccinations';
 import Schedule from './components/Veterinarian/Schedule';
 import Patients from './components/Veterinarian/Patients';
 import Referrals from './components/Veterinarian/Referrals';
+import CompleteAppointment from './components/Veterinarian/CompleteAppointment';
 
 function App() {
   return (
@@ -24,10 +25,10 @@ function App() {
         {/* Vet pages */}
         <Route path="/vet/schedule" element={<Schedule />} />
         <Route path="/vet/records" element={<PatientRecords />} />
-        <Route path="/vet/prescriptions" element={<PatientRecords />} />
         <Route path="/vet/patients" element={<Patients />} />
         <Route path="/vet/vaccinations" element={<Vaccinations />} />
         <Route path="/vet/referrals" element={<Referrals />} />
+        <Route path="/vet/complete/:appointmentId" element={<CompleteAppointment />} />
         {/* Fallback */}
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>

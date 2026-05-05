@@ -75,7 +75,8 @@ namespace ChivasApi.Controllers
             const string diagSql = @"
                 SELECT d.type AS Type, d.symptoms AS Symptoms,
                        DATE_FORMAT(a.date, '%Y-%m-%d') AS Date,
-                       a.procedure_name AS ProcedureName
+                       a.procedure_name AS ProcedureName,
+                       a.status AS Status
                 FROM Diagnosis d
                 INNER JOIN Appointment a ON d.appntm_id = a.appntm_id
                 WHERE a.pet_id = @PetId
