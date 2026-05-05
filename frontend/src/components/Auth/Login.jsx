@@ -8,6 +8,12 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    if (localStorage.getItem('chivas_token')) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+
   // Login State
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');

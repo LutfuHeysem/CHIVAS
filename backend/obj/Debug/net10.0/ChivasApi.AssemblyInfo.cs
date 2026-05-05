@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChivasApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+667002ea5517475a588ba72c36272785a2803e37")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b9664dcdaf5f5a3539f989aca72f80caecfd95c0")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChivasApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChivasApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
