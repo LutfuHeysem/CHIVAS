@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Layout from '../Layout/Layout';
 import styles from './PatientRecords.module.css';
 
 const API = 'http://localhost:8080';
@@ -13,7 +13,6 @@ const URGENCY_COLORS = {
 };
 
 const Referrals = () => {
-  const navigate = useNavigate();
   const [referrals, setReferrals] = useState([]);
   const [vets, setVets] = useState([]);
   const [pets, setPets] = useState([]);
@@ -71,107 +70,106 @@ const Referrals = () => {
   const outgoing = referrals.filter(r => r.direction === 'Outgoing');
 
   return (
-    <div className={`page-enter ${styles.layout}`}>
-      <div className={styles.sidebar}>
-        <button className={styles.backBtn} onClick={() => navigate('/dashboard')}>← Dashboard</button>
-        <h2 className={styles.title}>Referrals</h2>
+    <Layout>
+      <div className={styles.layout} style={{ background: 'transparent' }}>
+        <div className={styles.sidebar} style={{ background: 'white', borderRight: '1px solid var(--ink-200)' }}>
+          <h2 className={styles.title}>Referral Status</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+            <div className={styles.appItem} style={{ background: 'var(--green-50)', borderColor: 'var(--green-300)' }}>
+              <div className={styles.appPet}>📤 Outgoing: {outgoing.length}</div>
+            </div>
+            <div className={styles.appItem} style={{ background: 'var(--sky-soft)', borderColor: 'var(--sky)' }}>
+              <div className={styles.appPet}>📥 Incoming: {incoming.length}</div>
+            </div>
+          </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-          <div className={styles.appItem} style={{ background: 'var(--green-50)', borderColor: 'var(--green-300)' }}>
-            <div className={styles.appPet}>📤 Outgoing: {outgoing.length}</div>
-          </div>
-          <div className={styles.appItem} style={{ background: 'var(--sky-soft)', borderColor: 'var(--sky)' }}>
-            <div className={styles.appPet}>📥 Incoming: {incoming.length}</div>
-          </div>
+          <button onClick={() => setShowForm(!showForm)} style={{ 
+            width: '100%', 
+            padding: '12px', 
+            borderRadius: '10px', 
+            border: '2px dashed var(--green-400)', 
+            background: 'var(--green-50)', 
+            color: 'var(--green-800)', 
+            fontWeight: 600, 
+            cursor: 'pointer' 
+          }}>
+            {showForm ? '✕ Cancel' : '+ New Referral'}
+          </button>
         </div>
 
-        <button className={styles.card} onClick={() => setShowForm(!showForm)}
-          style={{ cursor: 'pointer', textAlign: 'center', fontWeight: 600, color: 'var(--green-700)', border: '2px dashed var(--green-400)', width: '100%' }}>
-          {showForm ? '✕ Cancel' : '+ New Referral'}
-        </button>
-      </div>
-
-      <div className={styles.main}>
-        <div className={styles.header}>
-          <h1>Referral Management</h1>
-          <p>Send and receive inter-clinic patient referrals.</p>
-        </div>
-
-        {showForm && (
-          <div className={styles.card} style={{ marginBottom: '24px' }}>
-            <h3>Create Referral</h3>
-            <select value={petId} onChange={e => setPetId(e.target.value)}>
-              <option value="" disabled>Select patient...</option>
-              {pets.map(p => <option key={p.petId} value={p.petId}>{p.name} ({p.species})</option>)}
-            </select>
-            <select value={toVetId} onChange={e => setToVetId(e.target.value)}>
-              <option value="" disabled>Refer to veterinarian...</option>
-              {vets.map(v => <option key={v.vetId} value={v.vetId}>Dr. {v.name} — {v.specialty}</option>)}
-            </select>
-            <select value={urgency} onChange={e => setUrgency(e.target.value)}>
-              {['Low', 'Medium', 'High', 'Critical'].map(u => <option key={u} value={u}>{u}</option>)}
-            </select>
-            <input placeholder="Reason for referral..." value={reason} onChange={e => setReason(e.target.value)} />
-            <textarea placeholder="Additional notes..." value={notes} onChange={e => setNotes(e.target.value)} />
-            <button onClick={handleCreate}>Send Referral</button>
+        <div className={styles.main}>
+          <div className={styles.header}>
+            <h1>Referral Management</h1>
+            <p>Send and receive inter-clinic patient referrals.</p>
           </div>
-        )}
 
-        {loading ? <p>Loading...</p> : referrals.length === 0 ? (
-          <div className={styles.empty}>No referrals yet. Create one to get started.</div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {referrals.map(r => (
-              <div key={r.referralId} className={styles.card}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '13px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
-                        background: r.direction === 'Outgoing' ? 'var(--green-100)' : 'var(--sky-soft)',
-                        color: r.direction === 'Outgoing' ? 'var(--green-800)' : 'var(--sky)' }}>
-                        {r.direction === 'Outgoing' ? '📤 Sent' : '📥 Received'}
-                      </span>
-                      <span style={{ fontSize: '12px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
-                        background: URGENCY_COLORS[r.urgencyLevel] + '22', color: URGENCY_COLORS[r.urgencyLevel] }}>
-                        {r.urgencyLevel}
-                      </span>
-                      <span style={{ fontSize: '12px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
-                        background: r.status === 'Pending' ? '#fef3c7' : r.status === 'Completed' ? 'var(--green-100)' : '#fde2e2',
-                        color: r.status === 'Pending' ? '#92400e' : r.status === 'Completed' ? 'var(--green-800)' : '#991b1b' }}>
-                        {r.status}
-                      </span>
+          {showForm && (
+            <div className={styles.card} style={{ marginBottom: '24px' }}>
+              <h3>Create Referral</h3>
+              <select value={petId} onChange={e => setPetId(e.target.value)}>
+                <option value="" disabled>Select patient...</option>
+                {pets.map(p => <option key={p.petId} value={p.petId}>{p.name} ({p.species})</option>)}
+              </select>
+              <select value={toVetId} onChange={e => setToVetId(e.target.value)}>
+                <option value="" disabled>Refer to veterinarian...</option>
+                {vets.map(v => <option key={v.vetId} value={v.vetId}>Dr. {v.name} — {v.specialty}</option>)}
+              </select>
+              <select value={urgency} onChange={e => setUrgency(e.target.value)}>
+                {['Low', 'Medium', 'High', 'Critical'].map(u => <option key={u} value={u}>{u}</option>)}
+              </select>
+              <input placeholder="Reason for referral..." value={reason} onChange={e => setReason(e.target.value)} />
+              <textarea placeholder="Additional notes..." value={notes} onChange={e => setNotes(e.target.value)} />
+              <button onClick={handleCreate} style={{ background: 'var(--green-700)', color: 'white', padding: '12px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 600 }}>Send Referral</button>
+            </div>
+          )}
+
+          {loading ? <p>Loading...</p> : referrals.length === 0 ? (
+            <div className={styles.empty}>No referrals yet. Create one to get started.</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {referrals.map(r => (
+                <div key={r.referralId} className={styles.card}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
+                          background: r.direction === 'Outgoing' ? 'var(--green-100)' : 'var(--sky-soft)',
+                          color: r.direction === 'Outgoing' ? 'var(--green-800)' : 'var(--sky)' }}>
+                          {r.direction === 'Outgoing' ? '📤 Sent' : '📥 Received'}
+                        </span>
+                        <span style={{ fontSize: '12px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
+                          background: URGENCY_COLORS[r.urgencyLevel] + '22', color: URGENCY_COLORS[r.urgencyLevel] }}>
+                          {r.urgencyLevel}
+                        </span>
+                        <span style={{ fontSize: '12px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
+                          background: r.status === 'Pending' ? '#fef3c7' : r.status === 'Completed' ? 'var(--green-100)' : '#fde2e2',
+                          color: r.status === 'Pending' ? '#92400e' : r.status === 'Completed' ? 'var(--green-800)' : '#991b1b' }}>
+                          {r.status}
+                        </span>
+                      </div>
+                      <h3 style={{ margin: '4px 0', fontSize: '16px' }}>{r.petName} ({r.petSpecies})</h3>
+                      <p style={{ fontSize: '13px', color: 'var(--ink-500)', margin: 0 }}>
+                        From Dr. {r.fromVetName} → Dr. {r.toVetName}
+                      </p>
+                      <p style={{ fontSize: '13px', color: 'var(--ink-700)', margin: '4px 0 0' }}>{r.reason}</p>
                     </div>
-                    <h3 style={{ margin: '4px 0', fontSize: '16px' }}>{r.petName} ({r.petSpecies})</h3>
-                    <p style={{ fontSize: '13px', color: 'var(--ink-500)', margin: 0 }}>
-                      From Dr. {r.fromVetName} → Dr. {r.toVetName}
-                    </p>
-                    <p style={{ fontSize: '13px', color: 'var(--ink-700)', margin: '4px 0 0' }}>{r.reason}</p>
+                    <div style={{ textAlign: 'right', fontSize: '13px', color: 'var(--ink-400)' }}>{r.referralDate}</div>
                   </div>
-                  <div style={{ textAlign: 'right', fontSize: '13px', color: 'var(--ink-400)' }}>{r.referralDate}</div>
+                  {r.status === 'Pending' && r.direction === 'Incoming' && (
+                    <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
+                      <button onClick={() => handleUpdateStatus(r.referralId, 'Completed')}
+                        style={{ padding: '6px 14px', background: 'var(--green-600)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
+                        Mark Completed
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {r.notes && (
-                  <div style={{ marginTop: '8px', padding: '8px', background: 'var(--paper)', borderRadius: '6px', fontSize: '13px' }}>
-                    {r.notes}
-                  </div>
-                )}
-                {r.status === 'Pending' && r.direction === 'Incoming' && (
-                  <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
-                    <button onClick={() => handleUpdateStatus(r.referralId, 'Completed')}
-                      style={{ padding: '6px 14px', background: 'var(--green-600)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
-                      Mark Completed
-                    </button>
-                    <button onClick={() => handleUpdateStatus(r.referralId, 'Cancelled')}
-                      style={{ padding: '6px 14px', background: 'var(--danger)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>
-                      Cancel
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

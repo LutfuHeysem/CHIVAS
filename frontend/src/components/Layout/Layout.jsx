@@ -22,7 +22,6 @@ const NAV = {
     { icon: '📋', label: 'Full Schedule', path: '/vet/schedule' },
     { icon: '🐾', label: 'My Patients', path: '/vet/patients' },
     { icon: '🗂️', label: 'Patient Records', path: '/vet/records' },
-    { icon: '💊', label: 'Prescriptions', path: '/vet/prescriptions' },
     { icon: '💉', label: 'Vaccinations', path: '/vet/vaccinations' },
     { icon: '🔄', label: 'Referrals', path: '/vet/referrals' },
   ],

@@ -81,7 +81,7 @@ const VetView = ({ data }) => {
       {/* Quick Actions */}
       <div className={styles.sectionLabel}>Quick Actions</div>
       <div className={styles.quickGrid}>
-        <button className={styles.quickBtn} onClick={() => navigate('/vet/records')}><span className={styles.quickBtnIcon}>📝</span>Write Prescription</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/vet/schedule')}><span className={styles.quickBtnIcon}>📅</span>Complete Appointment</button>
         <button className={styles.quickBtn} onClick={() => navigate('/vet/vaccinations')}><span className={styles.quickBtnIcon}>💉</span>New Vaccination Plan</button>
         <button className={styles.quickBtn} onClick={() => navigate('/vet/referrals')}><span className={styles.quickBtnIcon}>🔄</span>Create Referral</button>
       </div>

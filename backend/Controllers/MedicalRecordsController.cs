@@ -57,8 +57,8 @@ namespace ChivasApi.Controllers
 
             await _db.OpenAsync();
 
-            // ── RAW SQL: Ensure the vet is assigned to this appointment ──
-            var checkSql = "SELECT COUNT(1) FROM Appointment WHERE appntm_id = @AppntmId AND vet_id = @VetId";
+            // ── RAW SQL: Ensure the vet is assigned to this appointment and it's COMPLETED ──
+            var checkSql = "SELECT COUNT(1) FROM Appointment WHERE appntm_id = @AppntmId AND vet_id = @VetId AND status = 'Completed'";
             var owns = await _db.ExecuteScalarAsync<int>(checkSql, new { req.AppntmId, VetId = vetId });
             
             if (owns == 0) return BadRequest("You can only diagnose your own appointments.");
@@ -91,8 +91,8 @@ namespace ChivasApi.Controllers
 
             try
             {
-                // ── RAW SQL: Ensure vet is assigned to this appointment ──
-                var checkSql = "SELECT COUNT(1) FROM Appointment WHERE appntm_id = @AppntmId AND vet_id = @VetId";
+                // ── RAW SQL: Ensure vet is assigned to this appointment and it's COMPLETED ──
+                var checkSql = "SELECT COUNT(1) FROM Appointment WHERE appntm_id = @AppntmId AND vet_id = @VetId AND status = 'Completed'";
                 var owns = await _db.ExecuteScalarAsync<int>(checkSql, new { req.AppntmId, VetId = vetId }, transaction);
                 
                 if (owns == 0) return BadRequest("You can only prescribe for your own appointments.");
