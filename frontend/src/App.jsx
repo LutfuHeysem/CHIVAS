@@ -13,7 +13,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/my-pets" element={<MyPets />} />
         <Route path="/book-appointment" element={<BookAppointment />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={
+          localStorage.getItem('chivas_token') ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
+        } />
       </Routes>
     </Router>
   );
