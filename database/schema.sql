@@ -252,3 +252,5 @@ CREATE TABLE Branch_Stock (
     FOREIGN KEY (branch_id) REFERENCES Branch(branch_id) ON DELETE CASCADE,
     FOREIGN KEY (med_id) REFERENCES Medicine(med_id) ON DELETE CASCADE
 );
+C R E A T E   T A B L E   w o r k s _ a t   ( p e r s o n _ i d   I N T ,   b r a n c h _ i d   I N T ,   P R I M A R Y   K E Y   ( p e r s o n _ i d ,   b r a n c h _ i d ) ,   F O R E I G N   K E Y   ( p e r s o n _ i d )   R E F E R E N C E S   P e r s o n ( p e r s o n _ i d )   O N   D E L E T E   C A S C A D E ,   F O R E I G N   K E Y   ( b r a n c h _ i d )   R E F E R E N C E S   B r a n c h ( b r a n c h _ i d )   O N   D E L E T E   C A S C A D E ) ;  
+ 

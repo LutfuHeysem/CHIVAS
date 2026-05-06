@@ -14,6 +14,14 @@ const Login = () => {
     }
   }, [navigate]);
 
+  const [branches, setBranches] = useState([]);
+
+  React.useEffect(() => {
+    axios.get('http://localhost:8080/api/auth/branches')
+      .then(res => setBranches(res.data))
+      .catch(err => console.error('Could not load branches', err));
+  }, []);
+
   // Login State
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -23,6 +31,9 @@ const Login = () => {
   const [regSurname, setRegSurname] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regRole, setRegRole] = useState('PetOwner');
+  const [regBranchId, setRegBranchId] = useState('');
+  const [regNewBranchLocation, setRegNewBranchLocation] = useState('');
+  const [regNewBranchAddress, setRegNewBranchAddress] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [regConfirmPassword, setRegConfirmPassword] = useState('');
 
@@ -62,13 +73,28 @@ const Login = () => {
       return;
     }
 
+    if (regRole !== 'PetOwner' && !regBranchId) {
+      setError('Please select a branch.');
+      return;
+    }
+
+    if (regRole === 'ClinicManager' && regBranchId === 'new') {
+      if (!regNewBranchLocation || !regNewBranchAddress) {
+        setError('Please provide the location and address for the new branch.');
+        return;
+      }
+    }
+
     try {
       const response = await axios.post('http://localhost:8080/api/auth/register', {
         firstName: regFirstName,
         surname: regSurname,
         email: regEmail,
         password: regPassword,
-        role: regRole
+        role: regRole,
+        branchId: regRole !== 'PetOwner' && regBranchId !== 'new' ? parseInt(regBranchId) : null,
+        newBranchLocation: regRole === 'ClinicManager' && regBranchId === 'new' ? regNewBranchLocation : null,
+        newBranchAddress: regRole === 'ClinicManager' && regBranchId === 'new' ? regNewBranchAddress : null
       });
 
       const { token, role: returnedRole, firstName } = response.data;
@@ -201,6 +227,41 @@ const Login = () => {
                 <label>Email Address</label>
                 <input type="email" placeholder="example@email.com" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} required />
               </div>
+
+              {regRole !== 'PetOwner' && (
+                <>
+                  <div className={styles.inputGroup}>
+                    <label>Assign to Branch</label>
+                    <select 
+                      value={regBranchId} 
+                      onChange={e => setRegBranchId(e.target.value)}
+                      required
+                      style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #d1d5db' }}
+                    >
+                      <option value="" disabled>Select a branch...</option>
+                      {branches.map(b => (
+                        <option key={b.branchId} value={b.branchId}>{b.location} - {b.address}</option>
+                      ))}
+                      {regRole === 'ClinicManager' && (
+                        <option value="new" style={{ fontWeight: 'bold' }}>+ Add New Branch</option>
+                      )}
+                    </select>
+                  </div>
+
+                  {regRole === 'ClinicManager' && regBranchId === 'new' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: '#f9fafb', padding: '16px', borderRadius: '8px', border: '1px dashed #d1d5db' }}>
+                      <div className={styles.inputGroup}>
+                        <label>New Branch Location</label>
+                        <input type="text" placeholder="e.g. Istanbul" value={regNewBranchLocation} onChange={e => setRegNewBranchLocation(e.target.value)} required />
+                      </div>
+                      <div className={styles.inputGroup}>
+                        <label>New Branch Address</label>
+                        <input type="text" placeholder="Full address..." value={regNewBranchAddress} onChange={e => setRegNewBranchAddress(e.target.value)} required />
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
 
               <div className={styles.inputGroup}>
                 <label>Password</label>

@@ -178,6 +178,7 @@ const OwnerView = ({ data }) => {
 /* ════════════ MANAGER ════════════ */
 const ManagerView = ({ data }) => {
   const { stats, recentAppointments } = data;
+  const navigate = useNavigate();
   return (
     <>
       <div className={styles.bentoGrid}>
@@ -193,39 +194,30 @@ const ManagerView = ({ data }) => {
 
       <div className={styles.sectionLabel}>Quick Actions</div>
       <div className={styles.quickGrid}>
-        <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>👥</span>Manage Staff</button>
-        <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>📦</span>Check Inventory</button>
-        <button className={styles.quickBtn}><span className={styles.quickBtnIcon}>📄</span>Generate Report</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/staff')}><span className={styles.quickBtnIcon}>👥</span>Manage Staff</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/inventory')}><span className={styles.quickBtnIcon}>📦</span>Check Inventory</button>
+        <button className={styles.quickBtn} onClick={() => navigate('/reports?compose=true')}><span className={styles.quickBtnIcon}>📄</span>New Report</button>
       </div>
 
-      <div className={styles.twoCol}>
-        <div className={styles.schedulePanel}>
-          <div className={styles.scheduleTitle}>Recent Activity</div>
-          <div className={styles.scheduleSub}>Latest appointments across all branches</div>
-          {recentAppointments.length === 0 ? (
-            <div className={styles.emptyState}>No activity yet.</div>
-          ) : (
-            <div className={styles.timeline}>
-              {recentAppointments.map(a => (
-                <div key={a.appntmId} className={styles.timelineItem}>
-                  <div className={styles.timelineDot} />
-                  <div className={styles.timelineContent}>
-                    <div className={styles.timelineTime}>{a.date} · {a.time}</div>
-                    <div className={styles.timelinePet}>{a.petName}</div>
-                    <div className={styles.timelineDetail}>Dr. {a.vetName} · {a.procedureName || 'Consultation'}</div>
-                  </div>
+      <div className={styles.schedulePanel}>
+        <div className={styles.scheduleTitle}>Recent Activity</div>
+        <div className={styles.scheduleSub}>Latest appointments across all branches</div>
+        {recentAppointments.length === 0 ? (
+          <div className={styles.emptyState}>No activity yet.</div>
+        ) : (
+          <div className={styles.timeline}>
+            {recentAppointments.map(a => (
+              <div key={a.appntmId} className={styles.timelineItem}>
+                <div className={styles.timelineDot} />
+                <div className={styles.timelineContent}>
+                  <div className={styles.timelineTime}>{a.date} · {a.time}</div>
+                  <div className={styles.timelinePet}>{a.petName}</div>
+                  <div className={styles.timelineDetail}>Dr. {a.vetName} · {a.procedureName || 'Consultation'}</div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className={styles.featureLinks}>
-          <Feature icon="📊" color="blue" title="Plan Analytics" desc="Subscriber stats and marketing targets." />
-          <Feature icon="📦" color="green" title="Stock & Waste" desc="Inventory levels, expiry dates, and waste logs." />
-          <Feature icon="👥" color="warm" title="Staff Management" desc="Vet profiles, branch assignments, and ratings." />
-          <Feature icon="📄" color="berry" title="Reports" desc="Export performance and financial reports." />
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

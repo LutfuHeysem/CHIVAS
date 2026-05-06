@@ -1,0 +1,174 @@
+.pageHeader { margin-bottom: 24px; }
+
+.pageTitle {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 4px;
+}
+
+.pageSubtitle { color: #6b7280; font-size: 14px; margin: 0; }
+
+/* ── Summary row ── */
+.summaryRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.summaryCard {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  border-left: 4px solid #3b82f6;
+}
+
+.summaryIcon { font-size: 28px; }
+.summaryLabel { font-size: 12px; text-transform: uppercase; color: #6b7280; font-weight: 600; letter-spacing: 0.05em; }
+.summaryValue { font-size: 28px; font-weight: 700; color: #1f2937; margin-top: 2px; }
+
+/* ── Sections ── */
+.section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.sectionDesc { font-size: 14px; color: #6b7280; margin: -8px 0 16px; }
+
+/* ── Table ── */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid #e5e7eb;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.table tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: #f9fafb; }
+
+.revenue { color: #10b981; font-weight: 600; }
+.empty { text-align: center; color: #9ca3af; padding: 24px; }
+
+/* ── Rank badges ── */
+.rankGold  { font-weight: 700; color: #b45309; background: #fef3c7; padding: 3px 8px; border-radius: 6px; }
+.rankSilver{ font-weight: 700; color: #374151; background: #f3f4f6; padding: 3px 8px; border-radius: 6px; }
+.rankBronze{ font-weight: 700; color: #92400e; background: #fff7ed; padding: 3px 8px; border-radius: 6px; }
+
+/* ── Type badge ── */
+.typeBadge {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ── Edit button ── */
+.editBtn {
+  background: none;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.editBtn:hover { background: #f3f4f6; }
+
+/* ── Form ── */
+.form { }
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.formGroup { display: flex; flex-direction: column; gap: 6px; }
+
+.formGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.formGroup input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.saveBtn {
+  padding: 10px 28px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+  transition: opacity 0.15s;
+}
+.saveBtn:hover { opacity: 0.9; }
+
+.cancelBtn {
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.cancelBtn:hover { background: #f3f4f6; }
