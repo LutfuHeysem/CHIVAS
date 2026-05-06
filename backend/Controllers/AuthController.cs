@@ -21,6 +21,15 @@ namespace ChivasApi.Controllers
             _config = config;
         }
 
+        [HttpGet("branches")]
+        public async Task<IActionResult> GetBranches()
+        {
+            await _db.OpenAsync();
+            const string sql = "SELECT branch_id AS BranchId, location AS Location, address AS Address FROM Branch ORDER BY location ASC";
+            var branches = await _db.QueryAsync(sql);
+            return Ok(branches);
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest req)
         {
@@ -103,21 +112,54 @@ namespace ChivasApi.Controllers
             }
             else if (req.Role == "Veterinarian")
             {
+                if (req.BranchId == null) return BadRequest("Branch ID is required for staff.");
                 await _db.ExecuteAsync(
                     "INSERT INTO Staff (staff_id, salary) VALUES (@Id, 50000.00)",
                     new { Id = personId });
                 await _db.ExecuteAsync(
                     "INSERT INTO Veterinarian (vet_id, specialty, species_expertise) VALUES (@Id, 'General', 'All')",
                     new { Id = personId });
+                await _db.ExecuteAsync(
+                    "INSERT INTO works_at (person_id, branch_id) VALUES (@Id, @BranchId)",
+                    new { Id = personId, BranchId = req.BranchId });
             }
             else if (req.Role == "ClinicManager")
             {
+                int branchIdToUse;
+
+                if (!string.IsNullOrEmpty(req.NewBranchLocation) && !string.IsNullOrEmpty(req.NewBranchAddress))
+                {
+                    const string insertBranchSql = @"
+                        INSERT INTO Branch (location, address, clinic_id)
+                        VALUES (@Loc, @Addr, 1);
+                        SELECT LAST_INSERT_ID();";
+                    branchIdToUse = await _db.ExecuteScalarAsync<int>(insertBranchSql, new { Loc = req.NewBranchLocation, Addr = req.NewBranchAddress });
+                }
+                else if (req.BranchId != null)
+                {
+                    branchIdToUse = req.BranchId.Value;
+                }
+                else
+                {
+                    return BadRequest("Branch ID is required for staff.");
+                }
+
                 await _db.ExecuteAsync(
                     "INSERT INTO Staff (staff_id, salary) VALUES (@Id, 70000.00)",
                     new { Id = personId });
                 await _db.ExecuteAsync(
                     "INSERT INTO Clinic_Manager (manager_id) VALUES (@Id)",
                     new { Id = personId });
+                await _db.ExecuteAsync(
+                    "INSERT INTO works_at (person_id, branch_id) VALUES (@Id, @BranchId)",
+                    new { Id = personId, BranchId = branchIdToUse });
+
+                if (!string.IsNullOrEmpty(req.NewBranchLocation))
+                {
+                    await _db.ExecuteAsync(
+                        "UPDATE Branch SET manager_id = @Id WHERE branch_id = @BranchId",
+                        new { Id = personId, BranchId = branchIdToUse });
+                }
             }
             else
             {
@@ -173,6 +215,9 @@ namespace ChivasApi.Controllers
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string Role { get; set; } = "PetOwner";
+        public int? BranchId { get; set; }
+        public string? NewBranchLocation { get; set; }
+        public string? NewBranchAddress { get; set; }
     }
 
     internal class PersonRow

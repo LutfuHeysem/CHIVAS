@@ -215,11 +215,11 @@ namespace ChivasApi.Controllers
                 Role = "ClinicManager",
                 Stats = new
                 {
-                    TotalVeterinarians = (int)(stats.TotalVeterinarians),
-                    TotalPetOwners = (int)(stats.TotalPetOwners),
-                    TotalPets = (int)(stats.TotalPets),
-                    TotalAppointments = (int)(stats.TotalAppointments),
-                    TodaysAppointments = (int)(stats.TodaysAppointments)
+                    TotalVeterinarians = Convert.ToInt32(stats.TotalVeterinarians),
+                    TotalPetOwners = Convert.ToInt32(stats.TotalPetOwners),
+                    TotalPets = Convert.ToInt32(stats.TotalPets),
+                    TotalAppointments = Convert.ToInt32(stats.TotalAppointments),
+                    TodaysAppointments = Convert.ToInt32(stats.TodaysAppointments)
                 },
                 RecentAppointments = recent
             };
