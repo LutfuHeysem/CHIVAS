@@ -31,7 +31,12 @@ const Dashboard = () => {
       .then(res => setData(res.data))
       .catch(err => {
         console.error('Dashboard fetch failed', err);
-        if (err.response?.status === 401) navigate('/login');
+        if (err.response?.status === 401){
+          localStorage.removeItem('chivas_token');
+          localStorage.removeItem('chivas_role');
+          localStorage.removeItem('chivas_user');
+          navigate('/login');
+        } 
       })
       .finally(() => setLoading(false));
   }, [navigate]);

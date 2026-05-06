@@ -249,7 +249,7 @@
 }
 
 .rateBtn {
-  background: white;
+  background: rgb(255, 255, 255);
   border: 1px solid var(--gold-dark);
   color: var(--gold-dark);
   padding: 6px 12px;
@@ -262,7 +262,7 @@
 
 .rateBtn:hover {
   background: var(--gold-dark);
-  color: white;
+  color: rgb(255, 255, 255);
 }
 
 .ratingBadge {
@@ -357,7 +357,7 @@
 
 .submitBtn {
   background: var(--blue-600);
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
